@@ -30,10 +30,10 @@ namespace AI_Task
                     DrawPoints("intersectionPoints", "Точки всех пересечений", _fff.GetIntersectionPoints());
                 }},
                 {"union", delegate {
-                    DrawFunc("union", "Все точки объединения: ", _fff.GetUnion());
+                    DrawFunc("union", "Все точки объединения", _fff.GetUnion());
                 }},
                 {"diff", delegate {
-                    DrawFunc("diff", "Все точки, участвующие в пересечении: ", _fff.GetDiff());
+                    DrawFunc("diff", "Все точки, участвующие в пересечении", _fff.GetDiff());
                 }},
                 {"maxOfUnion", delegate {
                 }},

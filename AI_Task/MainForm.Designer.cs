@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.calcForEachFuncB = new System.Windows.Forms.Button();
             this.valueTB = new System.Windows.Forms.TextBox();
             this.speedChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -40,6 +40,7 @@
             this.clearAllB = new System.Windows.Forms.Button();
             this.showL = new System.Windows.Forms.Label();
             this.debugL = new System.Windows.Forms.Label();
+            this.xLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.speedChart)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,8 +71,8 @@
             this.speedChart.BackColor = System.Drawing.Color.Silver;
             this.speedChart.BorderlineColor = System.Drawing.Color.Black;
             this.speedChart.BorderlineWidth = 2;
-            chartArea2.Name = "ChartArea1";
-            this.speedChart.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.speedChart.ChartAreas.Add(chartArea1);
             this.speedChart.Cursor = System.Windows.Forms.Cursors.Hand;
             this.speedChart.Location = new System.Drawing.Point(12, 117);
             this.speedChart.Name = "speedChart";
@@ -169,6 +170,15 @@
             this.debugL.TabIndex = 7;
             this.debugL.Text = "Info:";
             // 
+            // xLabel
+            // 
+            this.xLabel.AutoSize = true;
+            this.xLabel.Location = new System.Drawing.Point(93, 20);
+            this.xLabel.Name = "xLabel";
+            this.xLabel.Size = new System.Drawing.Size(20, 18);
+            this.xLabel.TabIndex = 7;
+            this.xLabel.Text = "X:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -176,6 +186,7 @@
             this.BackColor = System.Drawing.Color.Pink;
             this.ClientSize = new System.Drawing.Size(962, 713);
             this.Controls.Add(this.debugL);
+            this.Controls.Add(this.xLabel);
             this.Controls.Add(this.showL);
             this.Controls.Add(this.showChB);
             this.Controls.Add(this.resTB);
@@ -208,6 +219,7 @@
         private System.Windows.Forms.Button clearAllB;
         private System.Windows.Forms.Label showL;
         private System.Windows.Forms.Label debugL;
+        private System.Windows.Forms.Label xLabel;
     }
 }
 

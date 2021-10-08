@@ -11,6 +11,7 @@ namespace AI_Task
         public MainForm()
         {
             InitializeComponent();
+
             //Console.SetOut(new TextBoxStreamWriter(resTB));
             speedChart.ChartAreas[0].AxisX.RoundAxisValues();
 
@@ -23,22 +24,32 @@ namespace AI_Task
 
         private void calcForEachFuncB_Click(object sender, EventArgs e)
         {
-            _chartManager.HideAllButFuncs();
-            CalcAndDrawValueForFunc("Значения точки X для функций: ", _fff.GetFuncs().ToArray());
+            if (IsValueEnteredCorrectly())
+            {
+                _chartManager.HideAllButFuncs();
+                OutputResult("Значения точки X = " + _fff.XToCheck + " для функций: ", _fff.GetFuncs().ToArray());
+                _chartManager.Draw("X");
+            }
         }
 
         private void calcForDiffB_Click(object sender, EventArgs e)
         {
-            _chartManager.HideAllButFuncs();
-            _chartManager.Draw("diff");
-            CalcAndDrawValueForFunc("Значение точки X для функции пересечения", _fff.GetDiff());
+            if (IsValueEnteredCorrectly())
+            {
+                _chartManager.HideAllButFuncs();
+                _chartManager.Draw("diff");
+                OutputResult("Значение точки X = " + _fff.XToCheck + " для функции пересечения: ", _fff.GetDiff());
+            }
         }
 
         private void calcForUnionB_Click(object sender, EventArgs e)
         {
-            _chartManager.HideAllButFuncs();
-            _chartManager.Draw("union");
-            CalcAndDrawValueForFunc("Значение точки X для функции объединения", _fff.GetUnion());
+            if (IsValueEnteredCorrectly())
+            {
+                _chartManager.HideAllButFuncs();
+                _chartManager.Draw("union");
+                OutputResult("Значение точки X = " + _fff.XToCheck + " для функции объединения: ", _fff.GetUnion());
+            }
         }
 
         private void calcCenterOfMaxB_Click(object sender, EventArgs e)
@@ -48,33 +59,43 @@ namespace AI_Task
 
         #endregion
 
-        bool ValueIsCorrect(double value)
+        bool IsValueEnteredCorrectly()
         {
-            if (0.0 <= value && value <= 120.0)
+            if (valueTB.Text != string.Empty)
             {
-                return true;
+                double value = Convert.ToDouble(valueTB.Text);
+
+                if (0.0 <= value && value <= 120.0)
+                {
+                    _fff.XToCheck = value;
+                    return true;
+                }
             }
             else
             {
                 MessageBox.Show("X должен лежать в диапозоне от 0 до 120!");
-                return false;
             }
+
+            return false;
         }
 
-        void CalcAndDrawValueForFunc(string text, params Func[] funcs)
+        void OutputResult(string text, params Func[] funcs)
         {
-            if (valueTB.Text != string.Empty)
-                if (ValueIsCorrect(Convert.ToDouble(valueTB.Text)))
+            _chartManager.Draw("X");
+
+            resTB.Text += text;
+            Console.WriteLine(text);
+
+            foreach (var func in funcs)
+                if (func.ExistsIn(_fff.XToCheck))
                 {
-                    _fff.XToCheck = Convert.ToDouble(valueTB.Text);
-                               
-                    _chartManager.Draw("X");
-
-                    Console.WriteLine(text);
-
-                    foreach (var func in funcs)
-                        if (func.ExistsIn(_fff.XToCheck))
-                            Console.WriteLine(func.Name + ": " + func.FindValueIn(_fff.XToCheck));             
+                    Console.WriteLine(func.Name + ": " + func.FindValueIn(_fff.XToCheck));
+                    resTB.Text += ("\n" + func.Name + ": " + func.FindValueIn(_fff.XToCheck) + Environment.NewLine);
+                }
+                else
+                {
+                    Console.WriteLine("не существует");
+                    resTB.Text += ("\n" + "не существует" + Environment.NewLine);
                 }
         }
 

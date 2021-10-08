@@ -17,7 +17,7 @@ namespace AI_Task
         public override void Write(char value)
         {
             base.Write(value);
-            _output.AppendText(value.ToString()); // Когда символ записывается в поток, добавляем его в textbox.
+            _output.Text += value.ToString(); // Когда символ записывается в поток, добавляем его в textbox.
         }
 
         public override Encoding Encoding
