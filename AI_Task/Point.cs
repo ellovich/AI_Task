@@ -16,7 +16,7 @@ namespace AI_Task
 
         public double DistanceTo(Point p)
         {
-            return Math.Sqrt(Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2)); ;
+            return Math.Sqrt((p.X - X)*(p.X - X) + (p.Y - Y)*(p.Y - Y));
         }
 
         public bool IsOnLine(Line line)
@@ -26,13 +26,13 @@ namespace AI_Task
 
         public bool IsOn_X_ProjectionOf(Line line)
         {
-            return line.Begin.X <= X && X <= line.End.X || 
+            return line.Begin.X < X && X < line.End.X || 
                    D.Eq(line.Begin.X, X) || D.Eq(line.End.X, X);
         }
 
         public bool IsOn_Y_ProjectionOf(Line line)
         {
-            return line.Begin.Y <= Y && Y <= line.End.Y ||
+            return line.Begin.Y < Y && Y < line.End.Y ||
                    D.Eq(line.Begin.Y, Y) || D.Eq(line.End.Y, Y);
         }
 
@@ -42,19 +42,14 @@ namespace AI_Task
         } 
 
         #region OVERRIDINGS
-
         public static bool operator ==(Point point1, Point point2)
         {
-            if (point1.Equals(point2))
-                return true;
-            return false;
+            return point1.Equals(point2);
         }
 
         public static bool operator !=(Point point1, Point point2)
         {
-            if (!point1.Equals(point2))
-                return true;
-            return false;
+            return !point1.Equals(point2);
         }
 
         public override bool Equals(object obj)
@@ -72,7 +67,6 @@ namespace AI_Task
         {
             return "( " + Math.Round(X, 2) + "; " + Math.Round(Y, 2) + " )";
         }
-
         #endregion
     }
 }

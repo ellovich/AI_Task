@@ -7,78 +7,55 @@ namespace AI_Task
 {
     class ChartManager
     {
-        Chart _chart;
-        Fff _fff;
-        readonly Dictionary<string, Action> _series;
+        private readonly Chart _chart;
+        private readonly FuncsManager _funcsManager;
+        private readonly Dictionary<string, Action> _seriesActions;
 
-        public ChartManager(Fff fff, Chart chart)
+        public ChartManager(FuncsManager funcsManager, Chart chart)
         {
-            _fff = fff;
+            _funcsManager = funcsManager;
             _chart = chart;
 
-            _series = new Dictionary<string, Action>
+            ChartSetup();
+            _seriesActions = BindActionsToSeries();
+            InitChartWithAllFuncs();
+        }
+
+        public void HideAllButFuncs()
+        {
+            foreach (string serName in _seriesActions.Keys)
             {
-                {"X", delegate {
-                    DrawX(_fff.XToCheck);
-                }},
-                {"funcsPoints", delegate {
-                    Console.WriteLine("Только точки функций: ");
-                    foreach (var func in _fff.GetFuncs())
-                        DrawPoints("funcsPoints", func.Name, func.Points.ToArray());
-                }},
-                {"intersectionPoints", delegate {
-                    DrawPoints("intersectionPoints", "Точки всех пересечений", _fff.GetIntersectionPoints());
-                }},
-                {"union", delegate {
-                    DrawFunc("union", "Все точки объединения", _fff.GetUnion());
-                }},
-                {"diff", delegate {
-                    DrawFunc("diff", "Все точки, участвующие в пересечении", _fff.GetDiff());
-                }},
-                {"maxOfUnion", delegate {
-                }},
-                {"unionMaxPoints", delegate {
-                }},
-            };
+                _chart.Series.Remove(_chart.Series[serName]);
+                _chart.Series.Add(serName);
+            }
+        }
 
-            foreach (var func in _fff.GetFuncs())
-                _chart.Series.Add(func.Name);
-            foreach (var label in GetSeriesLabels())
-                _chart.Series.Add(label);
-
-            foreach (var func in _fff.GetFuncs())
-                DrawFunc(func.Name, func.Name, func);
-
-            //_chart.Series.Add("парабола");
-            //_chart.Series["парабола"].ChartType = SeriesChartType.Spline;
-            //double x = 0.001;
-            //const int N = 1000;
-            //for (int i = 1; i < N; i++)
-            //{
-            //    double y = x * x;
-            //    _chart.Series[0].Points.AddXY(x, y);
-            //    x += 0.001;
-            //}
+        public string[] GetSeriesLabels()
+        {
+            return _seriesActions.Select(s => s.Key).ToArray();
         }
 
         public void Draw(string series)
         {
-            if (_series.ContainsKey(series))
-                _series[series]();           
+            if (_seriesActions.ContainsKey(series))
+                _seriesActions[series]();
         }
 
-        public void DrawX(double x)
+        #region DRAWING FUNCS
+        private void DrawX(string seriesName, double x)
         {
-            _chart.Series.Remove(_chart.Series["X"]);
-            _chart.Series.Add("X");
+            _chart.Series.Remove(_chart.Series[seriesName]);
+            _chart.Series.Add(seriesName);
 
-            _chart.Series["X"].ChartType = SeriesChartType.FastLine;
-            _chart.Series["X"].Points.AddXY(x, 0);
-            _chart.Series["X"].Points.AddXY(x, 1);
-            _chart.Series["X"].BorderWidth = 4;
+            _chart.Series[seriesName].ChartType = SeriesChartType.FastLine;
+            _chart.Series[seriesName].Points.AddXY(x, 0);
+            _chart.Series[seriesName].Points.AddXY(x, 1);
+            _chart.Series[seriesName].BorderWidth = 4;
+
+            Console.WriteLine(seriesName + " = " + x);
         }
 
-        public void DrawFunc(string seriesName, string text, Func func)
+        private void DrawFunc(string seriesName, string text, Func func)
         {
             _chart.Series[seriesName].ToolTip = seriesName;
             _chart.Series[seriesName].LegendText = seriesName;
@@ -93,8 +70,9 @@ namespace AI_Task
                 Console.WriteLine(p);
         }
 
-        public void DrawPoints(string seriesName, string text, Point[] points)
+        private void DrawPoints(string seriesName, string text, Point[] points)
         {
+            _chart.Series[seriesName].ToolTip = "X=#VALX, Y=#VALY";
             _chart.Series[seriesName].LegendText = seriesName;
             _chart.Series[seriesName].ChartType = SeriesChartType.Point;
             _chart.Series[seriesName].BorderWidth = 4;
@@ -106,19 +84,53 @@ namespace AI_Task
             foreach (var p in points)
                 Console.WriteLine(p);
         }
+        #endregion
 
-        public void HideAllButFuncs()
+        private void ChartSetup()
         {
-            foreach (string serName in _series.Keys)
-            {
-                _chart.Series.Remove(_chart.Series[serName]);
-                _chart.Series.Add(serName);
-            }
+            _chart.ChartAreas[0].AxisX.RoundAxisValues();
+            _chart.ChartAreas[0].AxisX.Minimum = 0;
+            _chart.ChartAreas[0].AxisY.Maximum = 1;
         }
 
-        public string[] GetSeriesLabels()
+        private Dictionary<string, Action> BindActionsToSeries()
         {
-            return _series.Select(s => s.Key).ToArray();
+            return new Dictionary<string, Action>
+            {
+                {"X", delegate {
+                    DrawX("X", _funcsManager.XToCheck);
+                }},
+                {"funcsPoints", delegate {
+                    foreach (var func in _funcsManager.GetFuncs())
+                        DrawPoints("funcsPoints", func.Name, func.Points.ToArray());
+                }},
+                {"intersectionPoints", delegate {
+                    DrawPoints("intersectionPoints", "Точки всех пересечений", _funcsManager.GetIntersectionPoints());
+                }},
+                {"union", delegate {
+                    DrawFunc("union", "Все точки объединения", _funcsManager.GetUnion());
+                }},
+                {"diff", delegate {
+                    DrawFunc("diff", "Все точки, участвующие в пересечении", _funcsManager.GetDiff());
+                }},
+                {"unionMaxPoints", delegate {
+                    DrawPoints("unionMaxPoints", "Точки максимумов", _funcsManager.GetUnionMaxPoints());
+                }},
+                {"unionMaxAverage", delegate {
+                    DrawX("unionMaxAverage", _funcsManager.GetUnionMaxAverage());
+                }},
+            };
+        }
+        
+        private void InitChartWithAllFuncs()
+        {
+            foreach (var func in _funcsManager.GetFuncs())
+                _chart.Series.Add(func.Name);
+            foreach (var label in GetSeriesLabels())
+                _chart.Series.Add(label);
+
+            foreach (var func in _funcsManager.GetFuncs())
+                DrawFunc(func.Name, func.Name, func);
         }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AI_Task
@@ -18,6 +14,9 @@ namespace AI_Task
         }
     }
 
+    /// <summary>
+    /// сравнение вещественных чисел с допущением 0.00001
+    /// </summary>
     public static class D
     {
         public static bool Eq(double d1, double d2)
