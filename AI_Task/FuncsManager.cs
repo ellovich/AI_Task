@@ -16,7 +16,10 @@ namespace AI_Task
 
         private Func _diffFunc, _unionFunc;
 
+        private List<Point> _bordersOfMaxLines;
+        private List<Point> _trainglesMaxPoints;
         private List<Point> _unionMaxPoints;
+        private List<Point> _unionMaxPointsAll;
         private double _unionMaxAverage;
 
 
@@ -31,8 +34,11 @@ namespace AI_Task
             _diffFunc = CalcDiff();
             _unionFunc = CalcUnion();
             
+            // order is important!
+            _trainglesMaxPoints = CalcTrainglesMaxPoints();
+            _bordersOfMaxLines = CalcBordersOfMaxLines();
             _unionMaxPoints = CalcUnionMaxPoints();
-            _unionMaxAverage = CalcUnionMaxAverage();
+            _unionMaxAverage = CalcUnionMaxAverage(0.5);
         }
 
         private List<Func> ReadFuncsFromFile(string source)
@@ -105,7 +111,17 @@ namespace AI_Task
                     diffPoints.Add(new Point(x, linesWithX.Select(line => line.FindValueIn(x)).Min()));
             }
 
-            return new Func("diff", diffPoints.Distinct().ToArray());
+            HashSet<Point> diffPointsSet = new HashSet<Point>(diffPoints);
+
+            // удаление лишних точек
+            for (int i = 0; i < diffPoints.Count; i++)
+            {
+                Point point = diffPoints[i];
+                if (!_funcPoints.Contains(point) && !_intersectionPoints.Contains(point))
+                    diffPoints.RemoveAt(i--);
+            }
+
+            return new Func("diff", diffPoints.ToArray());
         }
 
         private Func CalcUnion()
@@ -122,50 +138,88 @@ namespace AI_Task
                 unionPoints.Add(new Point(x, linesWithX.Select(line => line.FindValueIn(x)).Max()));
             }
 
-            //
+            unionPoints = unionPoints.Distinct().ToList();
+
+            // удаление лишних точек
+            for (int i = 0; i < unionPoints.Count; i++)
+            {
+                Point point = unionPoints[i];
+                if (!_funcPoints.Contains(point) && !_intersectionPoints.Contains(point))
+                    unionPoints.RemoveAt(i--);
+            }
+
             // TODO: узнать, надо ли замыкать к нулю 
             unionPoints = unionPoints.OrderBy(p => p.X).ToList(); //
-            unionPoints.Insert(0, new Point (unionPoints[0].X, 0)); //
-            unionPoints.Add(new Point(unionPoints[unionPoints.Count-1].X, 0)); //
-            //
+            unionPoints.Insert(0, new Point(unionPoints[0].X, 0)); //
+            unionPoints.Add(new Point(unionPoints[unionPoints.Count - 1].X, 0)); //
+            /////////////////////////////////////////////////////////////////////
 
-            return new Func("union", unionPoints.Distinct().ToArray());
+            return new Func("union", unionPoints.ToArray());
+        }
+
+        #region FOR UNION MAX AVERAGE
+        private List<Point> CalcTrainglesMaxPoints()
+        {
+            double maxY = _unionFunc.Points.Max(pMax => pMax.Y);
+
+            return _funcs
+                .Where(f => f.Type == Func.FuncType.triangular)
+                .SelectMany(f => f.Points)
+                .Where(p => D.Eq(p.Y, maxY))
+                .OrderBy(p => p.X).ToList();
+        }
+
+        private List<Point> CalcBordersOfMaxLines()
+        {   
+            double maxY = _unionFunc.Points.Max(pMax => pMax.Y);
+            HashSet<Point> borders = _funcs
+                .Where(f => f.Type != Func.FuncType.triangular)
+                .SelectMany(f => f.Points)
+                .Where(p => D.Eq(p.Y, maxY)).ToHashSet();
+            return borders.Except(_trainglesMaxPoints).OrderBy(p => p.X).ToList();
         }
 
         private List<Point> CalcUnionMaxPoints()
         {
-            double maxY = _unionFunc.Points.Max(pMax => pMax.Y);
-
-            return _unionFunc.Points           
-                .Where(p => D.Eq(p.Y, maxY))
-                .Where(p => _funcPoints.Contains(p))
-                .OrderBy(p => p.X).ToList();
+            List<Point> unionMaxPoints = new List<Point>(_bordersOfMaxLines);
+            unionMaxPoints.AddRange(_trainglesMaxPoints);
+            return unionMaxPoints;
         }
 
-        private double CalcUnionMaxAverage()
+        private double CalcUnionMaxAverage(double interval = 0.001)
         {
-            List<Line> lines = new List<Line>();
-
-            // TODO
-            if (_unionMaxPoints.Count == 1)
-                return _unionMaxPoints[0].X;
-            else
-                lines = Line.GetLinesFromPoints(_unionMaxPoints);
-
             double sum = 0;
             double count = 0;
 
-            foreach (var line in lines)
+            _unionMaxPointsAll = new List<Point>(); // to CalcUnionMaxPoints()
+
+            if (_bordersOfMaxLines.Count != 0)
             {
-                List<Point> points = line.GetPointsByInterval();
-                sum += points.Sum(p => p.X);
-                count += points.Count;
+                List<Line> lines = Line.GetLinesFromPoints(_bordersOfMaxLines);
+
+                foreach (var line in lines)
+                {
+                    List<Point> points = line.GetPointsByInterval(interval);
+                    _unionMaxPointsAll.AddRange(points);
+                    sum += points.Sum(p => p.X);
+                    count += points.Count;
+                }
             }
 
-            // прибавлять к сумме значения точек и единичку за каждую точку в количество
+            if (_trainglesMaxPoints.Count != 0)
+            {
+                foreach (var point in _trainglesMaxPoints)
+                {
+                    _unionMaxPointsAll.Add(point);
+                    sum += point.X;
+                    count += 1;
+                }
+            }
 
             return sum / count;
         }
+        #endregion
+
         #endregion
 
         #region GETTERS
@@ -176,6 +230,7 @@ namespace AI_Task
         public Func GetDiff() { return _diffFunc; }
         public Func GetUnion() { return _unionFunc; }
         public Point[] GetUnionMaxPoints() { return _unionMaxPoints.ToArray(); }
+        public Point[] GetUnionMaxPointsAll() { return _unionMaxPointsAll.ToArray(); }
         public double GetUnionMaxAverage() { return _unionMaxAverage; }
         #endregion
     }

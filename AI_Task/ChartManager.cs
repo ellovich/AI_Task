@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Diagnostics;
 
 namespace AI_Task
 {
@@ -52,7 +53,7 @@ namespace AI_Task
             _chart.Series[seriesName].Points.AddXY(x, 1);
             _chart.Series[seriesName].BorderWidth = 4;
 
-            Console.WriteLine(seriesName + " = " + x);
+            Debug.WriteLine(seriesName + " = " + x);
         }
 
         private void DrawFunc(string seriesName, string text, Func func)
@@ -65,9 +66,9 @@ namespace AI_Task
             foreach (var p in func.Points)
                 _chart.Series[seriesName].Points.AddXY(p.X, p.Y);
 
-            Console.WriteLine(text + ": ");
+            Debug.WriteLine(text + ": ");
             foreach (var p in func.Points)
-                Console.WriteLine(p);
+                Debug.WriteLine(p);
         }
 
         private void DrawPoints(string seriesName, string text, Point[] points)
@@ -80,9 +81,9 @@ namespace AI_Task
             foreach (var p in points)
                 _chart.Series[seriesName].Points.AddXY(p.X, p.Y);
 
-            Console.WriteLine(text + ": ");
+            Debug.WriteLine(text + ": ");
             foreach (var p in points)
-                Console.WriteLine(p);
+                Debug.WriteLine(p);
         }
         #endregion
 
@@ -110,11 +111,20 @@ namespace AI_Task
                 {"union", delegate {
                     DrawFunc("union", "Все точки объединения", _funcsManager.GetUnion());
                 }},
+                {"unionPoints", delegate {
+                    DrawPoints("unionPoints", "Все точки объединения", _funcsManager.GetUnion().Points.ToArray());
+                }},
                 {"diff", delegate {
                     DrawFunc("diff", "Все точки, участвующие в пересечении", _funcsManager.GetDiff());
                 }},
+                {"diffPoints", delegate {
+                    DrawPoints("diffPoints", "Все точки, участвующие в пересечении", _funcsManager.GetDiff().Points.ToArray());
+                }},
                 {"unionMaxPoints", delegate {
                     DrawPoints("unionMaxPoints", "Точки максимумов", _funcsManager.GetUnionMaxPoints());
+                }},
+                {"unionMaxPointsAll", delegate {
+                    DrawPoints("unionMaxPointsAll", "Все точки максимумов", _funcsManager.GetUnionMaxPointsAll());
                 }},
                 {"unionMaxAverage", delegate {
                     DrawX("unionMaxAverage", _funcsManager.GetUnionMaxAverage());

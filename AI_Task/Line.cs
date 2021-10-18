@@ -40,13 +40,11 @@ namespace AI_Task
             List<Line> lines = new List<Line>();
 
             if ((lines.Count % 2) == 0)
-                for (int i = 0; i < points.Count - 1; i+=2)
-                    lines.Add(new Line(points[i], points[i+1]));
+                for (int i = 0; i < points.Count - 1; i += 2)
+                    lines.Add(new Line(points[i], points[i + 1]));
             else
-                for (int i = 0; i < points.Count; i++)
-                {
+                throw new Exception("Нечётное количество точек!");
 
-                }
 
             return lines;
         }

@@ -81,13 +81,12 @@ namespace AI_Task
 
         public FuncType DefineType()
         {
-            switch(Lines.Count)
-            {
-                case 1:
-                case 2: return FuncType.linear;
-                case 3: return FuncType.triangular;
-                case 4: return FuncType.trapezoidal;
-            }
+            if (Lines.Count == 3)
+                return FuncType.trapezoidal;
+            else if (Points.First().Y != Points.Last().Y)
+                return FuncType.linear;
+            else if (Points.Count == 3)
+                return FuncType.triangular;
 
             return FuncType.undefined;
         }
@@ -96,15 +95,18 @@ namespace AI_Task
         {
             List<Point> properPoints = new List<Point>(points);
 
-            Point firstPoint = points[0];
+            Point firstPoint = points.First();
             // если линия идет сверху вниз
             if (!D.Eq(firstPoint.Y, 0))
                 properPoints.Insert(0, (new Point(0, firstPoint.Y)));
 
-            Point lastPoint = points[points.Count - 1];
-            // если линия идет снизу вверх
-            if (!D.Eq(lastPoint.Y, 0))
+            Point lastPoint = points.Last();
+            // если линия идет снизу вверх и это линейая функция
+            if (!D.Eq(lastPoint.Y, 0) && points.Count == 2)
                 properPoints.Add(new Point(s_maxX, lastPoint.Y));
+
+            if (!D.Eq(lastPoint.Y, 0) || !D.Eq(firstPoint.Y, 0)) // уже не первая и последняя
+                Type = FuncType.linear; // move somewhere
 
             return properPoints;
         }
