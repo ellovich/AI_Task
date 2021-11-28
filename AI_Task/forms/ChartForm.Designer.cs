@@ -1,6 +1,6 @@
 ﻿namespace AI_Task
 {
-    partial class MainForm
+    partial class ChartForm
     {
         /// <summary>
         /// Required designer variable.

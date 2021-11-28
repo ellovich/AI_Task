@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AI_Task</RootNamespace>
     <AssemblyName>AI_Task</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +33,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -49,22 +53,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChartManager.cs" />
-    <Compile Include="Func.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="forms\TemplatesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="forms\TemplatesForm.Designer.cs">
+      <DependentUpon>TemplatesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Point.cs" />
+    <Compile Include="src\core\ChartManager.cs" />
+    <Compile Include="src\core\Func.cs" />
+    <Compile Include="src\core\Imager.cs" />
+    <Compile Include="src\core\TextProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\tasks\Template.cs" />
+    <Compile Include="src\tasks\SeasonsTask.cs" />
+    <Compile Include="src\tasks\TemplatesTask.cs" />
+    <Compile Include="src\tasks\SugenoTask.cs" />
+    <Compile Include="src\core\Line.cs" />
+    <Compile Include="forms\ChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\ChartForm.Designer.cs">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\core\Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FuncsManager.cs" />
-    <Compile Include="TextBoxStreamWriter.cs" />
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="src\core\FuncsManager.cs" />
+    <EmbeddedResource Include="forms\ChartForm.resx">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\TemplatesForm.resx">
+      <DependentUpon>TemplatesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -90,10 +110,58 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Funcs.txt">
+    <Content Include="Notes.txt" />
+    <Content Include="res\Funcs.txt" />
+    <Content Include="res\letters\a.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Notes.txt" />
+    <Content Include="res\letters\b.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\letters\c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\seasons\Seasons.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\seasons\влажность.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\seasons\осадки.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\seasons\продолжительностьДня.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\seasons\температура.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\signs\div.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\signs\min.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\signs\mul.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\signs\plus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\tests\b7.png" />
+    <Content Include="res\tests\bBig.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\tests\invertedPlus.png" />
+    <Content Include="res\tests\plus2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="res\tests\plus3.png" />
+    <Content Include="res\tests\realPlus.png" />
+    <Content Include="res\tests\smth.png" />
+    <Content Include="res\tests\smth2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

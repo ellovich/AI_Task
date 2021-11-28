@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AI_Task
 {
-    class Func
+    public class Func
     {
         public List<Line> Lines { get; private set; }
         public List<Point> Points { get; private set; }
@@ -18,17 +18,56 @@ namespace AI_Task
             linear,
             triangular,
             trapezoidal,
+            spline,
             undefined,
         }
 
-        public Func (string name, params Point[] points)
+        public Func(string name, bool isSpline, params Point[] points)
         {
             Name = name;
-            Points = ConstructProperPoints(points.ToList());
-            Lines = ConstructLinesFromPoints(Points);
-            Type = DefineType();
 
-            s_maxX = SetMaxX();
+            if (isSpline)
+            {
+                Points = points.ToList();
+                Lines = new List<Line>();
+                Type = Func.FuncType.spline;
+            }
+            else
+            {
+                if (points.ToList().Count != 0)
+                {
+                    Points = ConstructProperPoints(points.ToList());
+                    Lines = ConstructLinesFromPoints(Points);
+                    Type = DefineType();
+                    s_maxX = SetMaxX();
+                }
+                else
+                {
+                    Points = new List<Point>();
+                    Lines = new List<Line>();
+                    Type = FuncType.undefined;
+                }
+            }
+        }
+
+        public Func(string name, params Point[] points)
+        {
+            Name = name;
+
+            if (points.ToList().Count != 0)
+            {
+                //       Points = ConstructProperPoints(points.ToList());
+                Points = points.ToList();
+                Lines = ConstructLinesFromPoints(Points);
+                Type = DefineType();
+                s_maxX = SetMaxX();
+            }
+            else
+            {
+                Points = new List<Point>();
+                Lines = new List<Line>();
+                Type = FuncType.undefined;
+            }
         }
 
         public Func(string name, List<Line> lines)
@@ -54,10 +93,10 @@ namespace AI_Task
             List<string> points = data[1].Split(' ').ToList();
             List<Point> pointsList = new List<Point>();
 
-            for (int i = 0; i < points.Count; i+=2)
+            for (int i = 0; i < points.Count; i += 2)
             {
                 double x = Convert.ToDouble(points[i]);
-                double y = Convert.ToDouble(points[i+1]);
+                double y = Convert.ToDouble(points[i + 1]);
                 pointsList.Add(new Point(x, y));
             }
 
@@ -71,7 +110,7 @@ namespace AI_Task
 
         public double FindValueIn(double x)
         {
-            return Lines.Find(line => line.XProjContains(x)).FindValueIn(x);
+            return ExistsIn(x) ? Lines.Find(line => line.XProjContains(x)).FindValueIn(x) : 0;
         }
 
         public List<Point> GetPointsOfMax()
@@ -97,15 +136,15 @@ namespace AI_Task
 
             Point firstPoint = points.First();
             // если линия идет сверху вниз
-            if (!D.Eq(firstPoint.Y, 0))
+            if (!(firstPoint.Y.Eq(0)))
                 properPoints.Insert(0, (new Point(0, firstPoint.Y)));
 
             Point lastPoint = points.Last();
             // если линия идет снизу вверх и это линейая функция
-            if (!D.Eq(lastPoint.Y, 0) && points.Count == 2)
+            if (!lastPoint.Y.Eq(0) && points.Count == 2)
                 properPoints.Add(new Point(s_maxX, lastPoint.Y));
 
-            if (!D.Eq(lastPoint.Y, 0) || !D.Eq(firstPoint.Y, 0)) // уже не первая и последняя
+            if (!lastPoint.Y.Eq(0) || !firstPoint.Y.Eq(0)) // уже не первая и последняя
                 Type = FuncType.linear; // move somewhere
 
             return properPoints;
@@ -140,12 +179,12 @@ namespace AI_Task
 
         #region OVERRIDINGS
 
-        public static bool operator == (Func f1, Func f2)
+        public static bool operator ==(Func f1, Func f2)
         {
             return f1.Equals(f2);
         }
 
-        public static bool operator != (Func f1, Func f2)
+        public static bool operator !=(Func f1, Func f2)
         {
             return !f1.Equals(f2);
         }

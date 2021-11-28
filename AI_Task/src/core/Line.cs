@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AI_Task
 {
-    class Line
+    public class Line
     {
         public Point Begin { get; private set; }
         public Point End { get; private set; }
@@ -45,7 +45,6 @@ namespace AI_Task
             else
                 throw new Exception("Нечётное количество точек!");
 
-
             return lines;
         }
 
@@ -61,7 +60,7 @@ namespace AI_Task
 
         public bool Contains(Point point)
         {
-            return D.Eq(point.DistanceTo(Begin) + point.DistanceTo(End), Length);
+            return (point.DistanceTo(Begin) + point.DistanceTo(End)).Eq(Length);
         }
 
         public bool IsParallelTo(Line line)

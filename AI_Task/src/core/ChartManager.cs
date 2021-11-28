@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace AI_Task
 {
-    class ChartManager
+    public class ChartManager
     {
         private readonly Chart _chart;
         private readonly FuncsManager _funcsManager;
@@ -60,7 +60,8 @@ namespace AI_Task
         {
             _chart.Series[seriesName].ToolTip = seriesName;
             _chart.Series[seriesName].LegendText = seriesName;
-            _chart.Series[seriesName].ChartType = SeriesChartType.FastLine;
+            _chart.Series[seriesName].ChartType = (func.Type == Func.FuncType.spline) ?
+                SeriesChartType.Spline : SeriesChartType.FastLine;
             _chart.Series[seriesName].BorderWidth = 3;
 
             foreach (var p in func.Points)
@@ -90,8 +91,8 @@ namespace AI_Task
         private void ChartSetup()
         {
             _chart.ChartAreas[0].AxisX.RoundAxisValues();
-            _chart.ChartAreas[0].AxisX.Minimum = 0;
-            _chart.ChartAreas[0].AxisY.Maximum = 1;
+            // _chart.ChartAreas[0].AxisX.Minimum = 0;
+            // _chart.ChartAreas[0].AxisY.Maximum = 1;
         }
 
         private Dictionary<string, Action> BindActionsToSeries()
@@ -131,12 +132,12 @@ namespace AI_Task
                 }},
             };
         }
-        
+
         private void InitChartWithAllFuncs()
         {
-            foreach (var func in _funcsManager.GetFuncs())
+            foreach (Func func in _funcsManager.GetFuncs())
                 _chart.Series.Add(func.Name);
-            foreach (var label in GetSeriesLabels())
+            foreach (string label in GetSeriesLabels())
                 _chart.Series.Add(label);
 
             foreach (var func in _funcsManager.GetFuncs())

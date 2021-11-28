@@ -2,7 +2,7 @@
 
 namespace AI_Task
 {
-    class Point
+    public class Point
     {
         public double X { get; private set; }
         public double Y { get; private set; }
@@ -16,7 +16,7 @@ namespace AI_Task
 
         public double DistanceTo(Point p)
         {
-            return Math.Sqrt((p.X - X)*(p.X - X) + (p.Y - Y)*(p.Y - Y));
+            return Math.Sqrt((p.X - X) * (p.X - X) + (p.Y - Y) * (p.Y - Y));
         }
 
         public bool IsOnLine(Line line)
@@ -26,20 +26,20 @@ namespace AI_Task
 
         public bool IsOn_X_ProjectionOf(Line line)
         {
-            return line.Begin.X < X && X < line.End.X || 
-                   D.Eq(line.Begin.X, X) || D.Eq(line.End.X, X);
+            return line.Begin.X < X && X < line.End.X ||
+                   line.Begin.X.Eq(X) || line.End.X.Eq(X);
         }
 
         public bool IsOn_Y_ProjectionOf(Line line)
         {
             return line.Begin.Y < Y && Y < line.End.Y ||
-                   D.Eq(line.Begin.Y, Y) || D.Eq(line.End.Y, Y);
+                   line.Begin.Y.Eq(Y) || line.End.Y.Eq(Y);
         }
 
         public bool IsValid
         { // только для данной задачи
             get { return Y >= 0 && Y <= 1 && X >= 0; }
-        } 
+        }
 
         #region OVERRIDINGS
         public static bool operator ==(Point point1, Point point2)
@@ -55,7 +55,7 @@ namespace AI_Task
         public override bool Equals(object obj)
         {
             Point p = (Point)obj;
-            return D.Eq(X, p.X) && D.Eq(Y, p.Y);
+            return X.Eq(p.X) && Y.Eq(p.Y);
         }
 
         public override int GetHashCode()

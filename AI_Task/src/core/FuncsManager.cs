@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace AI_Task
 {
-    class FuncsManager
+    public class FuncsManager
     {
         public double XToCheck { get; set; }
 
-        private readonly List<Func> _funcs;
+        private List<Func> _funcs;
 
         private List<Point> _allPoints;
         private List<Point> _funcPoints;
@@ -22,23 +22,40 @@ namespace AI_Task
         private List<Point> _unionMaxPointsAll;
         private double _unionMaxAverage;
 
-
-        public FuncsManager()
+        public FuncsManager(string fileName)
         {
-            _funcs = ReadFuncsFromFile("funcs.txt");
+            _funcs = ReadFuncsFromFile(fileName);
 
             _funcPoints = CalcFuncsPoints();
-            _intersectionPoints = CalcAllIntersectionPoints(); 
+            _intersectionPoints = CalcAllIntersectionPoints();
             _allPoints = CalcAllPoints();
-            
+
             _diffFunc = CalcDiff();
             _unionFunc = CalcUnion();
-            
+
             // order is important!
             _trainglesMaxPoints = CalcTrainglesMaxPoints();
             _bordersOfMaxLines = CalcBordersOfMaxLines();
             _unionMaxPoints = CalcUnionMaxPoints();
             _unionMaxAverage = CalcUnionMaxAverage(0.5);
+        }
+
+        public FuncsManager(params Func[] funcs)
+        {
+            _funcs = funcs.ToList();
+
+            _funcPoints = CalcFuncsPoints();
+            _intersectionPoints = CalcAllIntersectionPoints();
+            _allPoints = CalcAllPoints();
+
+            _diffFunc = CalcDiff();
+            _unionFunc = CalcUnion();
+
+            //order is important!
+            //   _trainglesMaxPoints = CalcTrainglesMaxPoints();
+            //   _bordersOfMaxLines = CalcBordersOfMaxLines();
+            //   _unionMaxPoints = CalcUnionMaxPoints();
+            //   _unionMaxAverage = CalcUnionMaxAverage(15);
         }
 
         private List<Func> ReadFuncsFromFile(string source)
@@ -50,6 +67,45 @@ namespace AI_Task
                     funcs.Add(Func.ReadFuncsFromFile(file));
 
             return funcs;
+        }
+
+        public List<double> GetAnswer(double x)
+        {
+            XToCheck = x;
+
+            List<double> ans = new List<double>();
+
+            foreach (var func in _funcs)
+                if (func.ExistsIn(XToCheck))
+                    ans.Add(func.FindValueIn(XToCheck));
+                else
+                    ans.Add(0);
+
+            return ans;
+        }
+
+        // индексатор
+        public Func this[string funcName]
+        {
+            get
+            {
+                return _funcs.Where(f => f.Name == funcName).First();
+            }
+        }
+
+        public void CutFuncWith(string funcName, Line line) // CHECK
+        {
+            Func func = _funcs.Where(f => f.Name == funcName).First();
+            var funcPoints = func.Points;
+            var pointsToRemove = func.Points.Where(p => p.Y < line.Begin.Y);
+
+            foreach (var p in pointsToRemove)
+                funcPoints.Remove(p);
+
+            foreach (var funcLine in func.Lines)
+                funcPoints.Add(funcLine.CalcIntersectionPointWith(line));
+
+            func = new Func(funcName, funcPoints.ToArray());
         }
 
         #region CALCS
@@ -165,18 +221,19 @@ namespace AI_Task
             return _funcs
                 .Where(f => f.Type == Func.FuncType.triangular)
                 .SelectMany(f => f.Points)
-                .Where(p => D.Eq(p.Y, maxY))
+                .Where(p => p.Y.Eq(maxY))
                 .OrderBy(p => p.X).ToList();
         }
 
         private List<Point> CalcBordersOfMaxLines()
-        {   
+        {
             double maxY = _unionFunc.Points.Max(pMax => pMax.Y);
-            HashSet<Point> borders = _funcs
+            List<Point> borders = _funcs
                 .Where(f => f.Type != Func.FuncType.triangular)
                 .SelectMany(f => f.Points)
-                .Where(p => D.Eq(p.Y, maxY)).ToHashSet();
-            return borders.Except(_trainglesMaxPoints).OrderBy(p => p.X).ToList();
+                .Where(p => p.Y.Eq(maxY)).ToList();
+            HashSet<Point> hs = new HashSet<Point>(borders);
+            return hs.Except(_trainglesMaxPoints).OrderBy(p => p.X).ToList();
         }
 
         private List<Point> CalcUnionMaxPoints()
