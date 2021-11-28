@@ -44,16 +44,28 @@ namespace AI_Task
         #region OVERRIDINGS
         public static bool operator ==(Point point1, Point point2)
         {
+            if (point2 is null)
+            {
+                return point2 is null;
+            }
             return point1.Equals(point2);
         }
 
         public static bool operator !=(Point point1, Point point2)
         {
+            if (point2 is null)
+            {
+                return point2 is null;
+            }
             return !point1.Equals(point2);
         }
 
         public override bool Equals(object obj)
         {
+            if (obj is null)
+            {
+                return obj is null;
+            }
             Point p = (Point)obj;
             return X.Eq(p.X) && Y.Eq(p.Y);
         }

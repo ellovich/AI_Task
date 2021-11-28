@@ -80,6 +80,7 @@ namespace AI_Task
             s_maxX = SetMaxX();
         }
 
+
         public static Func ReadFuncsFromFile(StreamReader sr)
         {
             string line = sr.ReadLine();
@@ -166,6 +167,16 @@ namespace AI_Task
              .Distinct().ToList();
         }
 
+
+        public Func ReplacePoint(Point oldPoint, Point newPoint)
+        {
+            int oldIndex = Points.IndexOf(oldPoint);
+            Points.Remove(oldPoint);
+            Points.Insert(oldIndex, newPoint);
+            Points = Points.OrderBy(p => p.X).ToList();
+
+            return new Func(Name, Points.ToArray());
+        }
 
         private static double s_maxX = double.MinValue;
         /// <summary>

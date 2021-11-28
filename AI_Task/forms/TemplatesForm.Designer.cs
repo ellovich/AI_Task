@@ -38,7 +38,11 @@
             this.cb_ConsiderInvreted = new System.Windows.Forms.CheckBox();
             this.b_LoadTemplates = new System.Windows.Forms.Button();
             this.cb_SortAuto = new System.Windows.Forms.CheckBox();
+            this.pb_DebugImage = new System.Windows.Forms.PictureBox();
+            this.pb_DebugImage2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_RecognitionElement)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel_signs
@@ -49,14 +53,14 @@
             this.panel_signs.Location = new System.Drawing.Point(13, 14);
             this.panel_signs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel_signs.Name = "panel_signs";
-            this.panel_signs.Size = new System.Drawing.Size(918, 419);
+            this.panel_signs.Size = new System.Drawing.Size(1019, 399);
             this.panel_signs.TabIndex = 6;
             // 
             // pb_RecognitionElement
             // 
             this.pb_RecognitionElement.BackColor = System.Drawing.SystemColors.Window;
             this.pb_RecognitionElement.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pb_RecognitionElement.Location = new System.Drawing.Point(347, 443);
+            this.pb_RecognitionElement.Location = new System.Drawing.Point(251, 423);
             this.pb_RecognitionElement.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pb_RecognitionElement.Name = "pb_RecognitionElement";
             this.pb_RecognitionElement.Size = new System.Drawing.Size(180, 180);
@@ -70,7 +74,7 @@
             // 
             // b_Erase
             // 
-            this.b_Erase.Location = new System.Drawing.Point(535, 543);
+            this.b_Erase.Location = new System.Drawing.Point(439, 523);
             this.b_Erase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_Erase.Name = "b_Erase";
             this.b_Erase.Size = new System.Drawing.Size(173, 35);
@@ -81,7 +85,7 @@
             // 
             // b_ChooseColor
             // 
-            this.b_ChooseColor.Location = new System.Drawing.Point(535, 502);
+            this.b_ChooseColor.Location = new System.Drawing.Point(439, 482);
             this.b_ChooseColor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_ChooseColor.Name = "b_ChooseColor";
             this.b_ChooseColor.Size = new System.Drawing.Size(173, 35);
@@ -92,7 +96,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(535, 443);
+            this.button1.Location = new System.Drawing.Point(439, 423);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(173, 35);
@@ -103,7 +107,7 @@
             // 
             // b_SortTemplates
             // 
-            this.b_SortTemplates.Location = new System.Drawing.Point(13, 543);
+            this.b_SortTemplates.Location = new System.Drawing.Point(13, 523);
             this.b_SortTemplates.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_SortTemplates.Name = "b_SortTemplates";
             this.b_SortTemplates.Size = new System.Drawing.Size(173, 35);
@@ -114,7 +118,7 @@
             // 
             // b_ResetSorting
             // 
-            this.b_ResetSorting.Location = new System.Drawing.Point(13, 588);
+            this.b_ResetSorting.Location = new System.Drawing.Point(13, 568);
             this.b_ResetSorting.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_ResetSorting.Name = "b_ResetSorting";
             this.b_ResetSorting.Size = new System.Drawing.Size(173, 35);
@@ -126,9 +130,9 @@
             // cb_ConsiderInvreted
             // 
             this.cb_ConsiderInvreted.AutoSize = true;
-            this.cb_ConsiderInvreted.Location = new System.Drawing.Point(535, 592);
+            this.cb_ConsiderInvreted.Location = new System.Drawing.Point(439, 572);
             this.cb_ConsiderInvreted.Name = "cb_ConsiderInvreted";
-            this.cb_ConsiderInvreted.Size = new System.Drawing.Size(187, 29);
+            this.cb_ConsiderInvreted.Size = new System.Drawing.Size(151, 24);
             this.cb_ConsiderInvreted.TabIndex = 11;
             this.cb_ConsiderInvreted.Text = "Consider inverted";
             this.cb_ConsiderInvreted.UseVisualStyleBackColor = true;
@@ -136,7 +140,7 @@
             // 
             // b_LoadTemplates
             // 
-            this.b_LoadTemplates.Location = new System.Drawing.Point(13, 443);
+            this.b_LoadTemplates.Location = new System.Drawing.Point(13, 423);
             this.b_LoadTemplates.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_LoadTemplates.Name = "b_LoadTemplates";
             this.b_LoadTemplates.Size = new System.Drawing.Size(173, 35);
@@ -148,21 +152,45 @@
             // cb_SortAuto
             // 
             this.cb_SortAuto.AutoSize = true;
-            this.cb_SortAuto.Location = new System.Drawing.Point(13, 506);
+            this.cb_SortAuto.Location = new System.Drawing.Point(13, 486);
             this.cb_SortAuto.Name = "cb_SortAuto";
-            this.cb_SortAuto.Size = new System.Drawing.Size(188, 29);
+            this.cb_SortAuto.Size = new System.Drawing.Size(154, 24);
             this.cb_SortAuto.TabIndex = 11;
             this.cb_SortAuto.Text = "Sort automatically";
             this.cb_SortAuto.UseVisualStyleBackColor = true;
             this.cb_SortAuto.CheckedChanged += new System.EventHandler(this.cb_SortAuto_CheckedChanged);
             // 
+            // pb_DebugImage
+            // 
+            this.pb_DebugImage.BackColor = System.Drawing.SystemColors.Window;
+            this.pb_DebugImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pb_DebugImage.Location = new System.Drawing.Point(664, 423);
+            this.pb_DebugImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pb_DebugImage.Name = "pb_DebugImage";
+            this.pb_DebugImage.Size = new System.Drawing.Size(180, 180);
+            this.pb_DebugImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pb_DebugImage.TabIndex = 7;
+            this.pb_DebugImage.TabStop = false;
+            // 
+            // pb_DebugImage2
+            // 
+            this.pb_DebugImage2.BackColor = System.Drawing.SystemColors.Window;
+            this.pb_DebugImage2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pb_DebugImage2.Location = new System.Drawing.Point(852, 423);
+            this.pb_DebugImage2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pb_DebugImage2.Name = "pb_DebugImage2";
+            this.pb_DebugImage2.Size = new System.Drawing.Size(180, 180);
+            this.pb_DebugImage2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pb_DebugImage2.TabIndex = 7;
+            this.pb_DebugImage2.TabStop = false;
+            // 
             // TemplatesForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumAquamarine;
-            this.ClientSize = new System.Drawing.Size(944, 637);
+            this.ClientSize = new System.Drawing.Size(1044, 611);
             this.Controls.Add(this.cb_SortAuto);
             this.Controls.Add(this.cb_ConsiderInvreted);
             this.Controls.Add(this.b_ResetSorting);
@@ -171,15 +199,19 @@
             this.Controls.Add(this.b_SortTemplates);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.b_Erase);
+            this.Controls.Add(this.pb_DebugImage2);
+            this.Controls.Add(this.pb_DebugImage);
             this.Controls.Add(this.pb_RecognitionElement);
             this.Controls.Add(this.panel_signs);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "TemplatesForm";
             this.Text = "Templates form";
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.SignsForm_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.SignsForm_DragEnter);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.TemplatesForm_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.TemplatesForm_DragEnter);
             ((System.ComponentModel.ISupportInitialize)(this.pb_RecognitionElement)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,5 +228,7 @@
         private System.Windows.Forms.CheckBox cb_ConsiderInvreted;
         private System.Windows.Forms.Button b_LoadTemplates;
         private System.Windows.Forms.CheckBox cb_SortAuto;
+        private System.Windows.Forms.PictureBox pb_DebugImage;
+        private System.Windows.Forms.PictureBox pb_DebugImage2;
     }
 }

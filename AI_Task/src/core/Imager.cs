@@ -52,10 +52,8 @@ namespace AI_Task
             return PutOnCanvas(image, width, height, Color.White);
         }
 
-        public static Image Resize(Image image, int newWidth, int maxHeight, bool onlyResizeIfWider)
+        public static Image Resize(Image image, int newWidth, int maxHeight)
         {
-            if (onlyResizeIfWider && image.Width <= newWidth) newWidth = image.Width;
-
             var newHeight = image.Height * newWidth / image.Width;
             if (newHeight > maxHeight)
             {
@@ -99,25 +97,20 @@ namespace AI_Task
             return returnImage;
         }
 
-        //The actual converting function  
-        public static string GetImage(object img)
+        public static Bitmap GrayScaleFilter(Bitmap image)
         {
-            return "data:image/jpg;base64," + Convert.ToBase64String((byte[])img);
-        }
+            Bitmap grayScale = new Bitmap(image.Width, image.Height);
 
-        public static void PerformImageResizeAndPutOnCanvas(string pFilePath, string pFileName, int pWidth, int pHeight, string pOutputFileName)
-        {
-            System.Drawing.Image imgBef;
-            imgBef = System.Drawing.Image.FromFile(pFilePath + pFileName);
+            for (Int32 y = 0; y < grayScale.Height; y++)
+                for (Int32 x = 0; x < grayScale.Width; x++)
+                {
+                    Color c = image.GetPixel(x, y);
 
-            System.Drawing.Image _imgR;
-            _imgR = Imager.Resize(imgBef, pWidth, pHeight, true);
+                    Int32 gs = (Int32)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
 
-            System.Drawing.Image _img2;
-            _img2 = Imager.PutOnCanvas(_imgR, pWidth, pHeight, System.Drawing.Color.White);
-
-            //Save JPEG  
-            Imager.SaveJpeg(pFilePath + pOutputFileName, _img2);
+                    grayScale.SetPixel(x, y, Color.FromArgb(gs, gs, gs));
+                }
+            return grayScale;
         }
     }
 }

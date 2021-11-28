@@ -26,9 +26,9 @@ namespace AI_Task
 
     public static class Extensions
     {
-        public static bool Eq(this double d1, double d2)
+        public static bool Eq(this double d1, double d2, double e = 0.0001)
         {
-            return Math.Abs(d1 - d2) <= 0.00001;
+            return Math.Abs(d1 - d2) <= e;
         }
 
         public static Color InvertColor(this Color ColourToInvert)
@@ -43,6 +43,12 @@ namespace AI_Task
                 throw new ArgumentNullException("extensions");
             IEnumerable<FileInfo> files = dir.EnumerateFiles();
             return files.Where(f => extensions.Contains(f.Extension)).ToArray();
+        }
+
+        public static void Out(this List<Point> list)
+        {
+            foreach (var item in list)
+                Console.WriteLine(item);
         }
 
         static void GetPixel2(this Image image)

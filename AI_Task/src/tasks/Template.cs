@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
 namespace AI_Task
 {
-    public class Template : IComparer<Template>, IComparable<Template>
+    public class Template
     {
-        public static int s_ImageRez = 7;  // change in Main
+        public static int s_ImageRez = 32;  // changing in Main
+        public static bool s_ConsiderInverted = true;
 
         public string Name { get; private set; }
         public Bitmap Image { get; private set; }
         public byte[] PixelsGray { get; private set; }
         public byte[] PixelsInvertedGray { get; private set; }
+        public double[] PixelsPossibilities { get; private set; }
         public double Possibility { get; private set; }
 
 
@@ -20,7 +21,8 @@ namespace AI_Task
         {
             Name = Path.GetFileNameWithoutExtension(imagePath);
             Image = new Bitmap(imagePath);
-            Image = (Bitmap)Imager.Resize(Image, s_ImageRez, s_ImageRez, false);
+            Image = (Bitmap)Imager.Resize(Image, s_ImageRez, s_ImageRez);
+            PixelsPossibilities = new double[s_ImageRez * s_ImageRez];
             PixelsGray = GetGrayPixels(Image);
 
             PixelsInvertedGray = new byte[PixelsGray.Length];
@@ -37,6 +39,7 @@ namespace AI_Task
             double counterForInv = 0;
             for (int i = 0; i < PixelsGray.Length; i++)
             {
+                // update s_FuncsManager
                 double myB = TemplatesTask.s_FuncsManager["black"].FindValueIn(myImagePixelsGrey[i]);
                 double myW = TemplatesTask.s_FuncsManager["white"].FindValueIn(myImagePixelsGrey[i]);
 
@@ -44,6 +47,8 @@ namespace AI_Task
                     counter += myB;
                 else if (PixelsGray[i] == 255)
                     counter += myW;
+
+                PixelsPossibilities[i] = counter;
 
                 if (PixelsInvertedGray[i] == 0)
                     counterForInv += myB;
@@ -54,16 +59,15 @@ namespace AI_Task
                 //        "\tb=" + Math.Round(myB, 2) + "\tw=" + Math.Round(myW, 2));
             }
 
-            Possibility = !TemplatesTask.s_ConsiderInverted ? (counter / PixelsGray.Length) :
+            Possibility = !s_ConsiderInverted ? (counter / PixelsGray.Length) :
                 Math.Max(counter / PixelsGray.Length, counterForInv / PixelsInvertedGray.Length);
 
-            //    DebugImages(Image, myImage, myImagePixelsGrey);
+            // DebugImages(Image, myImage, myImagePixelsGrey);
         }
-
 
         public byte[] GetGrayPixels(Bitmap image)
         {
-            image = (Bitmap)Imager.Resize(image, s_ImageRez, s_ImageRez, false);
+            image = (Bitmap)Imager.Resize(image, s_ImageRez, s_ImageRez);
 
             byte[] pixels = new byte[s_ImageRez * s_ImageRez];
             for (int x = 0; x < image.Width; x++)
@@ -77,40 +81,29 @@ namespace AI_Task
         }
 
 
-
         public void DebugImages(Image t, Image image2, byte[] image2Pixels)
         {
-            image2 = (Bitmap)Imager.Resize(image2, s_ImageRez, s_ImageRez, false);
+            string log = "";
 
+            image2 = (Bitmap)Imager.Resize(image2, s_ImageRez, s_ImageRez);
 
-            Console.WriteLine(new string(' ', 4) + Name + new string(' ', 12) + "Image2");
+            log += new string(' ', 4) + Name + new string(' ', 12) + "Image2" + Environment.NewLine;
 
             for (int x = 0; x < t.Width; x++)
             {
                 for (int y = 0; y < t.Height; y++)
-                    Console.Write(PixelsGray[y * s_ImageRez + x] + " ");
+                    log += PixelsGray[y * s_ImageRez + x] + " ";
 
-                Console.Write(new string(' ', 4));
+                log += new string(' ', 4);
 
                 for (int y = 0; y < image2.Height; y++)
-                    Console.Write(image2Pixels[y * s_ImageRez + x] + " ");
+                    log += image2Pixels[y * s_ImageRez + x] + " ";
 
-                Console.WriteLine();
+                log += Environment.NewLine;
             }
+            log += new string('=', 16) + Environment.NewLine;
 
-            Console.WriteLine(new string('=', 16));
-        }
-
-        public int Compare(Template t1, Template t2)
-        {
-            if (t1.Possibility < t2.Possibility) return -1;
-            else if (t1.Possibility > t2.Possibility) return 1;
-            else return 0;
-        }
-
-        public int CompareTo(Template t1)
-        {
-            return Compare(this, t1);
+            Console.WriteLine(log);
         }
     }
 }

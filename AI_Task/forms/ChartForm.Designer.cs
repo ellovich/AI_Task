@@ -28,52 +28,54 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            this.calcForEachFuncB = new System.Windows.Forms.Button();
-            this.valueTB = new System.Windows.Forms.TextBox();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            this.b_CalcForEachFunc = new System.Windows.Forms.Button();
+            this.tb_Value = new System.Windows.Forms.TextBox();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.calcForUnionB = new System.Windows.Forms.Button();
-            this.calcForDiffB = new System.Windows.Forms.Button();
-            this.resTB = new System.Windows.Forms.RichTextBox();
-            this.calcCenterOfMaxB = new System.Windows.Forms.Button();
-            this.showChB = new System.Windows.Forms.CheckedListBox();
-            this.clearAllB = new System.Windows.Forms.Button();
-            this.showL = new System.Windows.Forms.Label();
-            this.debugL = new System.Windows.Forms.Label();
-            this.xLabel = new System.Windows.Forms.Label();
+            this.b_CalcForUnion = new System.Windows.Forms.Button();
+            this.b_CalcForDiff = new System.Windows.Forms.Button();
+            this.tb_Res = new System.Windows.Forms.RichTextBox();
+            this.b_CalcCenterOfMax = new System.Windows.Forms.Button();
+            this.cb_Show = new System.Windows.Forms.CheckedListBox();
+            this.b_ClearAll = new System.Windows.Forms.Button();
+            this.l_Show = new System.Windows.Forms.Label();
+            this.l_Info = new System.Windows.Forms.Label();
+            this.l_X = new System.Windows.Forms.Label();
+            this.b_EditFuncs = new System.Windows.Forms.Button();
+            this.b_EndEditing = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.SuspendLayout();
             // 
-            // calcForEachFuncB
+            // b_CalcForEachFunc
             // 
-            this.calcForEachFuncB.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.calcForEachFuncB.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.calcForEachFuncB.Location = new System.Drawing.Point(183, 77);
-            this.calcForEachFuncB.Name = "calcForEachFuncB";
-            this.calcForEachFuncB.Size = new System.Drawing.Size(162, 25);
-            this.calcForEachFuncB.TabIndex = 0;
-            this.calcForEachFuncB.Text = "Calculate for each func";
-            this.calcForEachFuncB.UseVisualStyleBackColor = false;
-            this.calcForEachFuncB.Click += new System.EventHandler(this.calcForEachFuncB_Click);
+            this.b_CalcForEachFunc.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.b_CalcForEachFunc.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.b_CalcForEachFunc.Location = new System.Drawing.Point(180, 77);
+            this.b_CalcForEachFunc.Name = "b_CalcForEachFunc";
+            this.b_CalcForEachFunc.Size = new System.Drawing.Size(162, 25);
+            this.b_CalcForEachFunc.TabIndex = 0;
+            this.b_CalcForEachFunc.Text = "Calculate for each func";
+            this.b_CalcForEachFunc.UseVisualStyleBackColor = false;
+            this.b_CalcForEachFunc.Click += new System.EventHandler(this.b_CalcForEachFunc_Click);
             // 
-            // valueTB
+            // tb_Value
             // 
-            this.valueTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.valueTB.Location = new System.Drawing.Point(119, 11);
-            this.valueTB.Name = "valueTB";
-            this.valueTB.Size = new System.Drawing.Size(116, 26);
-            this.valueTB.TabIndex = 1;
-            this.valueTB.Text = "0";
-            this.valueTB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.valueTB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.valueTB_KeyPress);
+            this.tb_Value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tb_Value.Location = new System.Drawing.Point(119, 11);
+            this.tb_Value.Name = "tb_Value";
+            this.tb_Value.Size = new System.Drawing.Size(116, 26);
+            this.tb_Value.TabIndex = 1;
+            this.tb_Value.Text = "0";
+            this.tb_Value.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tb_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_Value_KeyPress);
             // 
             // chart
             // 
             this.chart.BackColor = System.Drawing.Color.Silver;
             this.chart.BorderlineColor = System.Drawing.Color.Black;
             this.chart.BorderlineWidth = 2;
-            chartArea1.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea2);
             this.chart.Cursor = System.Windows.Forms.Cursors.Hand;
             this.chart.Location = new System.Drawing.Point(12, 117);
             this.chart.Name = "chart";
@@ -82,125 +84,151 @@
             this.chart.TabIndex = 3;
             this.chart.Text = "chart";
             // 
-            // calcForUnionB
+            // b_CalcForUnion
             // 
-            this.calcForUnionB.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.calcForUnionB.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.calcForUnionB.Location = new System.Drawing.Point(183, 46);
-            this.calcForUnionB.Name = "calcForUnionB";
-            this.calcForUnionB.Size = new System.Drawing.Size(162, 25);
-            this.calcForUnionB.TabIndex = 4;
-            this.calcForUnionB.Text = "Calculate for union";
-            this.calcForUnionB.UseVisualStyleBackColor = false;
-            this.calcForUnionB.Click += new System.EventHandler(this.calcForUnionB_Click);
+            this.b_CalcForUnion.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.b_CalcForUnion.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.b_CalcForUnion.Location = new System.Drawing.Point(180, 46);
+            this.b_CalcForUnion.Name = "b_CalcForUnion";
+            this.b_CalcForUnion.Size = new System.Drawing.Size(162, 25);
+            this.b_CalcForUnion.TabIndex = 4;
+            this.b_CalcForUnion.Text = "Calculate for union";
+            this.b_CalcForUnion.UseVisualStyleBackColor = false;
+            this.b_CalcForUnion.Click += new System.EventHandler(this.b_CalcForUnion_Click);
             // 
-            // calcForDiffB
+            // b_CalcForDiff
             // 
-            this.calcForDiffB.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.calcForDiffB.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.calcForDiffB.Location = new System.Drawing.Point(15, 46);
-            this.calcForDiffB.Name = "calcForDiffB";
-            this.calcForDiffB.Size = new System.Drawing.Size(162, 25);
-            this.calcForDiffB.TabIndex = 4;
-            this.calcForDiffB.Text = "Calculate for diff";
-            this.calcForDiffB.UseVisualStyleBackColor = false;
-            this.calcForDiffB.Click += new System.EventHandler(this.calcForDiffB_Click);
+            this.b_CalcForDiff.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.b_CalcForDiff.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.b_CalcForDiff.Location = new System.Drawing.Point(12, 46);
+            this.b_CalcForDiff.Name = "b_CalcForDiff";
+            this.b_CalcForDiff.Size = new System.Drawing.Size(162, 25);
+            this.b_CalcForDiff.TabIndex = 4;
+            this.b_CalcForDiff.Text = "Calculate for diff";
+            this.b_CalcForDiff.UseVisualStyleBackColor = false;
+            this.b_CalcForDiff.Click += new System.EventHandler(this.b_CalcForDiff_Click);
             // 
-            // resTB
+            // tb_Res
             // 
-            this.resTB.BackColor = System.Drawing.Color.Silver;
-            this.resTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.resTB.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.resTB.Location = new System.Drawing.Point(310, 500);
-            this.resTB.Name = "resTB";
-            this.resTB.Size = new System.Drawing.Size(640, 200);
-            this.resTB.TabIndex = 5;
-            this.resTB.Text = "";
+            this.tb_Res.BackColor = System.Drawing.Color.Silver;
+            this.tb_Res.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_Res.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tb_Res.Location = new System.Drawing.Point(310, 500);
+            this.tb_Res.Name = "tb_Res";
+            this.tb_Res.Size = new System.Drawing.Size(640, 200);
+            this.tb_Res.TabIndex = 5;
+            this.tb_Res.Text = "";
             // 
-            // calcCenterOfMaxB
+            // b_CalcCenterOfMax
             // 
-            this.calcCenterOfMaxB.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.calcCenterOfMaxB.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.calcCenterOfMaxB.Location = new System.Drawing.Point(15, 77);
-            this.calcCenterOfMaxB.Name = "calcCenterOfMaxB";
-            this.calcCenterOfMaxB.Size = new System.Drawing.Size(162, 25);
-            this.calcCenterOfMaxB.TabIndex = 4;
-            this.calcCenterOfMaxB.Text = "Calc center of max";
-            this.calcCenterOfMaxB.UseVisualStyleBackColor = false;
-            this.calcCenterOfMaxB.Click += new System.EventHandler(this.calcCenterOfMaxB_Click);
+            this.b_CalcCenterOfMax.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.b_CalcCenterOfMax.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.b_CalcCenterOfMax.Location = new System.Drawing.Point(12, 77);
+            this.b_CalcCenterOfMax.Name = "b_CalcCenterOfMax";
+            this.b_CalcCenterOfMax.Size = new System.Drawing.Size(162, 25);
+            this.b_CalcCenterOfMax.TabIndex = 4;
+            this.b_CalcCenterOfMax.Text = "Calc center of max";
+            this.b_CalcCenterOfMax.UseVisualStyleBackColor = false;
+            this.b_CalcCenterOfMax.Click += new System.EventHandler(this.b_CalcCenterOfMax_Click);
             // 
-            // showChB
+            // cb_Show
             // 
-            this.showChB.BackColor = System.Drawing.Color.Silver;
-            this.showChB.CheckOnClick = true;
-            this.showChB.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.showChB.FormattingEnabled = true;
-            this.showChB.Location = new System.Drawing.Point(15, 500);
-            this.showChB.Name = "showChB";
-            this.showChB.Size = new System.Drawing.Size(279, 164);
-            this.showChB.TabIndex = 6;
-            this.showChB.SelectedIndexChanged += new System.EventHandler(this.showChB_SelectedIndexChanged);
+            this.cb_Show.BackColor = System.Drawing.Color.Silver;
+            this.cb_Show.CheckOnClick = true;
+            this.cb_Show.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Show.FormattingEnabled = true;
+            this.cb_Show.Location = new System.Drawing.Point(15, 500);
+            this.cb_Show.Name = "cb_Show";
+            this.cb_Show.Size = new System.Drawing.Size(279, 164);
+            this.cb_Show.TabIndex = 6;
+            this.cb_Show.SelectedIndexChanged += new System.EventHandler(this.cb_Show_SelectedIndexChanged);
             // 
-            // clearAllB
+            // b_ClearAll
             // 
-            this.clearAllB.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.clearAllB.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.clearAllB.Location = new System.Drawing.Point(75, 676);
-            this.clearAllB.Name = "clearAllB";
-            this.clearAllB.Size = new System.Drawing.Size(160, 25);
-            this.clearAllB.TabIndex = 4;
-            this.clearAllB.Text = "ClearAll";
-            this.clearAllB.UseVisualStyleBackColor = false;
-            this.clearAllB.Click += new System.EventHandler(this.clearAllB_Click);
+            this.b_ClearAll.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.b_ClearAll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.b_ClearAll.Location = new System.Drawing.Point(75, 676);
+            this.b_ClearAll.Name = "b_ClearAll";
+            this.b_ClearAll.Size = new System.Drawing.Size(160, 25);
+            this.b_ClearAll.TabIndex = 4;
+            this.b_ClearAll.Text = "ClearAll";
+            this.b_ClearAll.UseVisualStyleBackColor = false;
+            this.b_ClearAll.Click += new System.EventHandler(this.b_ClearAll_Click);
             // 
-            // showL
+            // l_Show
             // 
-            this.showL.AutoSize = true;
-            this.showL.Location = new System.Drawing.Point(12, 479);
-            this.showL.Name = "showL";
-            this.showL.Size = new System.Drawing.Size(39, 14);
-            this.showL.TabIndex = 7;
-            this.showL.Text = "Show:";
+            this.l_Show.AutoSize = true;
+            this.l_Show.Location = new System.Drawing.Point(12, 479);
+            this.l_Show.Name = "l_Show";
+            this.l_Show.Size = new System.Drawing.Size(39, 14);
+            this.l_Show.TabIndex = 7;
+            this.l_Show.Text = "Show:";
             // 
-            // debugL
+            // l_Info
             // 
-            this.debugL.AutoSize = true;
-            this.debugL.Location = new System.Drawing.Point(307, 479);
-            this.debugL.Name = "debugL";
-            this.debugL.Size = new System.Drawing.Size(31, 14);
-            this.debugL.TabIndex = 7;
-            this.debugL.Text = "Info:";
+            this.l_Info.AutoSize = true;
+            this.l_Info.Location = new System.Drawing.Point(307, 479);
+            this.l_Info.Name = "l_Info";
+            this.l_Info.Size = new System.Drawing.Size(31, 14);
+            this.l_Info.TabIndex = 7;
+            this.l_Info.Text = "Info:";
             // 
-            // xLabel
+            // l_X
             // 
-            this.xLabel.AutoSize = true;
-            this.xLabel.Location = new System.Drawing.Point(93, 20);
-            this.xLabel.Name = "xLabel";
-            this.xLabel.Size = new System.Drawing.Size(17, 14);
-            this.xLabel.TabIndex = 7;
-            this.xLabel.Text = "X:";
+            this.l_X.AutoSize = true;
+            this.l_X.Location = new System.Drawing.Point(93, 20);
+            this.l_X.Name = "l_X";
+            this.l_X.Size = new System.Drawing.Size(17, 14);
+            this.l_X.TabIndex = 7;
+            this.l_X.Text = "X:";
             // 
-            // MainForm
+            // b_EditFuncs
+            // 
+            this.b_EditFuncs.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.b_EditFuncs.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.b_EditFuncs.Location = new System.Drawing.Point(749, 77);
+            this.b_EditFuncs.Name = "b_EditFuncs";
+            this.b_EditFuncs.Size = new System.Drawing.Size(162, 25);
+            this.b_EditFuncs.TabIndex = 4;
+            this.b_EditFuncs.Text = "Edit funcs";
+            this.b_EditFuncs.UseVisualStyleBackColor = false;
+            this.b_EditFuncs.Click += new System.EventHandler(this.b_EditFuncs_Click);
+            // 
+            // b_EndEditing
+            // 
+            this.b_EndEditing.BackColor = System.Drawing.Color.MediumSpringGreen;
+            this.b_EndEditing.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.b_EndEditing.Location = new System.Drawing.Point(917, 77);
+            this.b_EndEditing.Name = "b_EndEditing";
+            this.b_EndEditing.Size = new System.Drawing.Size(33, 25);
+            this.b_EndEditing.TabIndex = 4;
+            this.b_EndEditing.Text = "OK";
+            this.b_EndEditing.UseVisualStyleBackColor = false;
+            this.b_EndEditing.Click += new System.EventHandler(this.b_EndEditing_Click);
+            // 
+            // ChartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Pink;
             this.ClientSize = new System.Drawing.Size(962, 713);
-            this.Controls.Add(this.debugL);
-            this.Controls.Add(this.xLabel);
-            this.Controls.Add(this.showL);
-            this.Controls.Add(this.showChB);
-            this.Controls.Add(this.resTB);
-            this.Controls.Add(this.calcForUnionB);
-            this.Controls.Add(this.calcCenterOfMaxB);
-            this.Controls.Add(this.clearAllB);
-            this.Controls.Add(this.calcForDiffB);
+            this.Controls.Add(this.l_Info);
+            this.Controls.Add(this.l_X);
+            this.Controls.Add(this.l_Show);
+            this.Controls.Add(this.cb_Show);
+            this.Controls.Add(this.tb_Res);
+            this.Controls.Add(this.b_EndEditing);
+            this.Controls.Add(this.b_EditFuncs);
+            this.Controls.Add(this.b_CalcForUnion);
+            this.Controls.Add(this.b_CalcCenterOfMax);
+            this.Controls.Add(this.b_ClearAll);
+            this.Controls.Add(this.b_CalcForDiff);
             this.Controls.Add(this.chart);
-            this.Controls.Add(this.valueTB);
-            this.Controls.Add(this.calcForEachFuncB);
+            this.Controls.Add(this.tb_Value);
+            this.Controls.Add(this.b_CalcForEachFunc);
             this.Font = new System.Drawing.Font("Microsoft JhengHei UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "MainForm";
-            this.Text = "Считалочка";
+            this.Name = "ChartForm";
+            this.Text = " ";
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -209,18 +237,20 @@
 
         #endregion
 
-        private System.Windows.Forms.Button calcForEachFuncB;
-        private System.Windows.Forms.TextBox valueTB;
+        private System.Windows.Forms.Button b_CalcForEachFunc;
+        private System.Windows.Forms.TextBox tb_Value;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart;
-        private System.Windows.Forms.Button calcForUnionB;
-        private System.Windows.Forms.Button calcForDiffB;
-        private System.Windows.Forms.RichTextBox resTB;
-        private System.Windows.Forms.Button calcCenterOfMaxB;
-        private System.Windows.Forms.CheckedListBox showChB;
-        private System.Windows.Forms.Button clearAllB;
-        private System.Windows.Forms.Label showL;
-        private System.Windows.Forms.Label debugL;
-        private System.Windows.Forms.Label xLabel;
+        private System.Windows.Forms.Button b_CalcForUnion;
+        private System.Windows.Forms.Button b_CalcForDiff;
+        private System.Windows.Forms.RichTextBox tb_Res;
+        private System.Windows.Forms.Button b_CalcCenterOfMax;
+        private System.Windows.Forms.CheckedListBox cb_Show;
+        private System.Windows.Forms.Button b_ClearAll;
+        private System.Windows.Forms.Label l_Show;
+        private System.Windows.Forms.Label l_Info;
+        private System.Windows.Forms.Label l_X;
+        private System.Windows.Forms.Button b_EditFuncs;
+        private System.Windows.Forms.Button b_EndEditing;
     }
 }
 

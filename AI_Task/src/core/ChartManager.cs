@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace AI_Task
 {
     public class ChartManager
     {
-        private readonly Chart _chart;
-        private readonly FuncsManager _funcsManager;
-        private readonly Dictionary<string, Action> _seriesActions;
+        private Chart _chart;
+        private FuncsManager _funcsManager;
+        private Dictionary<string, Action> _seriesActions;
 
         public ChartManager(FuncsManager funcsManager, Chart chart)
         {
@@ -21,6 +21,145 @@ namespace AI_Task
             _seriesActions = BindActionsToSeries();
             InitChartWithAllFuncs();
         }
+
+
+        #region FUNCS EDITING
+
+        public void EnterEditingMode()
+        {
+            HideAllButFuncs();
+            Draw("funcsPoints");
+            _chart.MouseMove += new MouseEventHandler(MouseMove);
+            _chart.MouseUp += new MouseEventHandler(MouseUp);
+        }
+
+        DataPoint _curPoint = null;
+        Point _curPointTemp = null;
+        Point _selectedPoint = null;
+        bool _isSelected = false;
+
+        void MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button.HasFlag(MouseButtons.Left))
+            {
+                HitTestResult hit = _chart.HitTest(e.X, e.Y);
+                Series s = hit.Series;
+
+                if (s != null)
+                    if (s.Points.Count == _funcsManager.GetFuncPoints().Length)
+                        if (hit.PointIndex >= 0)
+                            _curPoint = s.Points[hit.PointIndex];
+
+                if (_curPoint != null)
+                {
+                    ChartArea ca = _chart.ChartAreas[0];
+                    Axis ax = ca.AxisX;
+                    Axis ay = ca.AxisY;
+
+                    double dx = ax.PixelPositionToValue(e.X);
+                    double dy = ay.PixelPositionToValue(e.Y);
+                    _curPointTemp = new Point(dx, dy);
+
+                    if (!_isSelected)
+                    {
+                        // creates a copy
+                        var similarPoints = _funcsManager.GetFuncs()
+                            .SelectMany(f => f.Points)
+                            .Where(p => p.X.Eq(dx, 2) && p.Y.Eq(dy, 0.01)).ToList();
+
+                        if (similarPoints.Count > 0)
+                        {
+                            _selectedPoint = similarPoints[0];
+                            _isSelected = true;
+                        }
+                    }
+
+                    _curPoint.XValue = dx;
+                    _curPoint.YValues[0] = dy;
+                }
+            }
+        }
+
+        void MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!(_selectedPoint is null))
+            {
+                Func _selectedFunc = _funcsManager.GetFuncs().Where(f => f.Points.Contains(_selectedPoint)).First();
+                Func newFunc = _selectedFunc.ReplacePoint(_selectedPoint, _curPointTemp);
+                _funcsManager.ReplaceFunc(_selectedFunc, newFunc);
+            }
+            _curPoint = null;
+            _selectedPoint = null;
+            _isSelected = false;
+            RedrawFuncs();
+            Draw("funcsPoints");
+        }
+
+        public void EndEditingMode()
+        {
+            HideAllButFuncs();
+            _chart.MouseMove -= new MouseEventHandler(MouseMove);
+            _chart.MouseUp -= new MouseEventHandler(MouseUp);
+        }
+
+        #endregion
+
+
+        public void Draw(string series)
+        {
+            if (_seriesActions.ContainsKey(series))
+                _seriesActions[series]();
+        }
+
+
+        #region DRAWING FUNCS
+        private void DrawX(string seriesName, double x)
+        {
+            _chart.Series.Remove(_chart.Series[seriesName]);
+            _chart.Series.Add(seriesName);
+
+            _chart.Series[seriesName].ChartType = SeriesChartType.FastLine;
+            _chart.Series[seriesName].Points.AddXY(x, 0);
+            _chart.Series[seriesName].Points.AddXY(x, 1);
+            _chart.Series[seriesName].BorderWidth = 4;
+
+            // Debug.WriteLine(seriesName + " = " + x);
+        }
+
+        private void DrawFunc(string seriesName, string text, Func func)
+        {
+            _chart.Series[seriesName].ToolTip = seriesName;
+            _chart.Series[seriesName].LegendText = seriesName;
+            _chart.Series[seriesName].ChartType = (func.Type == Func.FuncType.spline) ?
+                SeriesChartType.Spline : SeriesChartType.FastLine;
+            _chart.Series[seriesName].BorderWidth = 3;
+
+            foreach (var p in func.Points)
+                _chart.Series[seriesName].Points.AddXY(p.X, p.Y);
+
+            string log = new string('#', 10);
+            log += text + ": " + Environment.NewLine;
+            foreach (var p in func.Points)
+                log += p + Environment.NewLine;
+            log += new string('#', 10);
+        }
+
+        private void DrawPoints(string seriesName, string text, Point[] points)
+        {
+            _chart.Series[seriesName].ToolTip = "X=#VALX, Y=#VALY";
+            _chart.Series[seriesName].LegendText = seriesName;
+            _chart.Series[seriesName].ChartType = SeriesChartType.Point;
+            _chart.Series[seriesName].BorderWidth = 8;
+
+            foreach (var p in points)
+                _chart.Series[seriesName].Points.AddXY(p.X, p.Y);
+
+            // Debug.WriteLine(text + ": ");
+            // foreach (var p in points)
+            //     Debug.WriteLine(p);
+        }
+        #endregion
+
 
         public void HideAllButFuncs()
         {
@@ -36,66 +175,8 @@ namespace AI_Task
             return _seriesActions.Select(s => s.Key).ToArray();
         }
 
-        public void Draw(string series)
-        {
-            if (_seriesActions.ContainsKey(series))
-                _seriesActions[series]();
-        }
 
-        #region DRAWING FUNCS
-        private void DrawX(string seriesName, double x)
-        {
-            _chart.Series.Remove(_chart.Series[seriesName]);
-            _chart.Series.Add(seriesName);
-
-            _chart.Series[seriesName].ChartType = SeriesChartType.FastLine;
-            _chart.Series[seriesName].Points.AddXY(x, 0);
-            _chart.Series[seriesName].Points.AddXY(x, 1);
-            _chart.Series[seriesName].BorderWidth = 4;
-
-            Debug.WriteLine(seriesName + " = " + x);
-        }
-
-        private void DrawFunc(string seriesName, string text, Func func)
-        {
-            _chart.Series[seriesName].ToolTip = seriesName;
-            _chart.Series[seriesName].LegendText = seriesName;
-            _chart.Series[seriesName].ChartType = (func.Type == Func.FuncType.spline) ?
-                SeriesChartType.Spline : SeriesChartType.FastLine;
-            _chart.Series[seriesName].BorderWidth = 3;
-
-            foreach (var p in func.Points)
-                _chart.Series[seriesName].Points.AddXY(p.X, p.Y);
-
-            Debug.WriteLine(text + ": ");
-            foreach (var p in func.Points)
-                Debug.WriteLine(p);
-        }
-
-        private void DrawPoints(string seriesName, string text, Point[] points)
-        {
-            _chart.Series[seriesName].ToolTip = "X=#VALX, Y=#VALY";
-            _chart.Series[seriesName].LegendText = seriesName;
-            _chart.Series[seriesName].ChartType = SeriesChartType.Point;
-            _chart.Series[seriesName].BorderWidth = 4;
-
-            foreach (var p in points)
-                _chart.Series[seriesName].Points.AddXY(p.X, p.Y);
-
-            Debug.WriteLine(text + ": ");
-            foreach (var p in points)
-                Debug.WriteLine(p);
-        }
-        #endregion
-
-        private void ChartSetup()
-        {
-            _chart.ChartAreas[0].AxisX.RoundAxisValues();
-            // _chart.ChartAreas[0].AxisX.Minimum = 0;
-            // _chart.ChartAreas[0].AxisY.Maximum = 1;
-        }
-
-        private Dictionary<string, Action> BindActionsToSeries()
+        Dictionary<string, Action> BindActionsToSeries()
         {
             return new Dictionary<string, Action>
             {
@@ -133,7 +214,21 @@ namespace AI_Task
             };
         }
 
-        private void InitChartWithAllFuncs()
+        void ChartSetup()
+        {
+            _chart.ChartAreas[0].AxisX.RoundAxisValues();
+        }
+
+        public void SetSizes(double xMin, double xMax, double yMin, double yMax)
+        {
+            _chart.ChartAreas[0].AxisX.Minimum = xMin;
+            _chart.ChartAreas[0].AxisX.Maximum = xMax;
+            _chart.ChartAreas[0].AxisY.Minimum = yMin;
+            _chart.ChartAreas[0].AxisY.Maximum = yMax;
+
+        }
+
+        void InitChartWithAllFuncs()
         {
             foreach (Func func in _funcsManager.GetFuncs())
                 _chart.Series.Add(func.Name);
@@ -142,6 +237,12 @@ namespace AI_Task
 
             foreach (var func in _funcsManager.GetFuncs())
                 DrawFunc(func.Name, func.Name, func);
+        }
+
+        void RedrawFuncs()
+        {
+            _chart.Series.Clear();
+            InitChartWithAllFuncs();
         }
     }
 }

@@ -69,6 +69,7 @@ namespace AI_Task
             return funcs;
         }
 
+
         public List<double> GetAnswer(double x)
         {
             XToCheck = x;
@@ -84,13 +85,9 @@ namespace AI_Task
             return ans;
         }
 
-        // индексатор
         public Func this[string funcName]
         {
-            get
-            {
-                return _funcs.Where(f => f.Name == funcName).First();
-            }
+            get { return _funcs.Where(f => f.Name == funcName).First(); }
         }
 
         public void CutFuncWith(string funcName, Line line) // CHECK
@@ -106,6 +103,13 @@ namespace AI_Task
                 funcPoints.Add(funcLine.CalcIntersectionPointWith(line));
 
             func = new Func(funcName, funcPoints.ToArray());
+        }
+
+        public void ReplaceFunc(Func oldFunc, Func newFunc)
+        {
+            int ind = _funcs.IndexOf(oldFunc);
+            _funcs.Remove(oldFunc);
+            _funcs.Insert(ind, newFunc);
         }
 
         #region CALCS
@@ -278,6 +282,7 @@ namespace AI_Task
         #endregion
 
         #endregion
+
 
         #region GETTERS
         public List<Func> GetFuncs() { return _funcs; }

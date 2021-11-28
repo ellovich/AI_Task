@@ -1,70 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace AI_Task
 {
     public partial class TemplatesForm : Form
     {
-        TemplatesTask _signsTask;
+        TemplatesTask _templateTask;
+        int _recognitionElement_size = 180;
+
 
         public TemplatesForm(TemplatesTask signsTask)
         {
             InitializeComponent();
-            TemplateFormElement.s_Size = 100;
+            TemplateViewElement.s_Size = 64;
             pb_RecognitionElement.Image = GetWhiteBitmap();
-            Init(signsTask);
+            FormInit(signsTask);
         }
 
-        public void Init(TemplatesTask signsTask)
+        void FormInit(TemplatesTask signsTask)
         {
-            _signsTask = signsTask;
+            _templateTask = signsTask;
 
             panel_signs.Controls.Clear();
-            foreach (var t in _signsTask.Templates)
-                panel_signs.Controls.Add(new TemplateFormElement(t));
+            foreach (var t in _templateTask.Templates)
+                panel_signs.Controls.Add(new TemplateViewElement(t));
 
-            _signsTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image);
+            _templateTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image); // model update
+
+            if (sortAuto)
+                SortByPossibility(); // view update
         }
 
-        private void pb_RecognitionElement_Paint(object sender, PaintEventArgs e)
-        {
-            _signsTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image);
-
-            foreach (TemplateFormElement tfe in panel_signs.Controls)
-                tfe.UpdateState();
-        }
 
         private void b_LoadTemplates_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.SelectedPath = AppDomain.CurrentDomain.BaseDirectory;
+            FolderBrowserDialog fbd = new FolderBrowserDialog
+            {
+                SelectedPath = AppDomain.CurrentDomain.BaseDirectory
+            };
 
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                _signsTask.Init(fbd.SelectedPath);
-                _signsTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image);
-                Init(_signsTask);
+                _templateTask.Init(fbd.SelectedPath);
+                FormInit(_templateTask);
             }
         }
 
+        private void pb_RecognitionElement_Paint(object sender, PaintEventArgs e)
+        {   // calls when picture has changed 
+            // sorting is called only after painting (see MouseUp event)
+            _templateTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image);
 
-        #region PAINTING
+            foreach (TemplateViewElement tfe in panel_signs.Controls)
+                tfe.UpdateState();
 
-        System.Drawing.Point? _prevPos = null;
-        Pen _pen = new Pen(Color.Black, 12);
-        Color _prevColor = Color.Black;
+            pb_DebugImage.Image = _templateTask.CreateScaledDebugPicture(
+                pb_RecognitionElement.Image, _recognitionElement_size);
+            pb_DebugImage2.Image = _templateTask.CreateColoredDebugWinnerPicture(_recognitionElement_size);
+        }
 
-        private Bitmap GetWhiteBitmap()
+        private void cb_ConsiderInvreted_CheckedChanged(object sender, EventArgs e)
         {
-            Bitmap bmp = new Bitmap(pb_RecognitionElement.Size.Width, pb_RecognitionElement.Size.Height);
+            Template.s_ConsiderInverted = cb_ConsiderInvreted.Checked;
+            _templateTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image);
+
+            if (sortAuto)
+                SortByPossibility();
+        }
+
+        Bitmap GetWhiteBitmap()
+        {
+            Bitmap bmp = new Bitmap(_recognitionElement_size, _recognitionElement_size);
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 g.Clear(Color.White);
             }
             return bmp;
         }
+
+
+        #region PAINTING
+
+        System.Drawing.Point? _prevPos = null;
+        Pen _pen = new Pen(Color.Black, 14);
+        Color _prevColor = Color.Black;
 
         private void pb_RecognitionElement_MouseDown(object sender, MouseEventArgs e)
         {
@@ -87,16 +110,19 @@ namespace AI_Task
         }
 
         private void pb_RecognitionElement_MouseUp(object sender, MouseEventArgs e)
-        {
+        {  // model is updating in MouseMove event
             _prevPos = null;
+
             if (sortAuto)
                 SortByPossibility();
         }
 
         private void b_ChooseColor_Click(object sender, EventArgs e)
         {
-            ColorDialog MyDialog = new ColorDialog();
-            MyDialog.Color = _pen.Color;
+            ColorDialog MyDialog = new ColorDialog
+            {
+                Color = _pen.Color
+            };
 
             if (MyDialog.ShowDialog() == DialogResult.OK)
                 _pen.Color = _prevColor = MyDialog.Color;
@@ -112,33 +138,42 @@ namespace AI_Task
 
         #region PICTURE LOADING
 
-        private void b_LoadFile_Click(object sender, System.EventArgs e)
+        void LoadImage(string filePath)
         {
-            var dialog = new OpenFileDialog();
-
-            dialog.Title = "Open Image";
-            dialog.Filter = "png files (*.png)|*.png";
-
-            if (dialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                Image image = new Bitmap(dialog.FileName);
-                image = Imager.Resize(image, pb_RecognitionElement.Width, pb_RecognitionElement.Height, false);
+                Image image = new Bitmap(filePath);
+                image = Imager.Resize(image, _recognitionElement_size, _recognitionElement_size);
                 pb_RecognitionElement.Image = image;
 
-                if (cb_ConsiderInvreted.Checked)
+                _templateTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image);
+
+                if (sortAuto)
                     SortByPossibility();
             }
+            catch (Exception ex) { Console.WriteLine(ex); }
+        }
 
+        private void b_LoadFile_Click(object sender, EventArgs e)
+        {
+            string codecFilter = "Image Files|";
+            foreach (var codec in ImageCodecInfo.GetImageEncoders())
+                codecFilter += codec.FilenameExtension + ";";
+
+            var dialog = new OpenFileDialog
+            {
+                Title = "Open Image",
+                Filter = codecFilter
+            };
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+                LoadImage(dialog.FileName);
             dialog.Dispose();
         }
 
-        private void SignsForm_DragEnter(object sender, DragEventArgs e)
+        private void TemplatesForm_DragDrop(object sender, DragEventArgs e)
         {
-            e.Effect = DragDropEffects.Move;
-        }
-
-        private void SignsForm_DragDrop(object sender, DragEventArgs e)
-        {
+            // loading image
             int x = PointToClient(new System.Drawing.Point(e.X, e.Y)).X;
             int y = PointToClient(new System.Drawing.Point(e.X, e.Y)).Y;
 
@@ -148,15 +183,33 @@ namespace AI_Task
                 y <= pb_RecognitionElement.Location.Y + pb_RecognitionElement.Height)
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                Image image = Image.FromFile(files[0]);
-                image = Imager.Resize(image, pb_RecognitionElement.Width, pb_RecognitionElement.Height, false);
-                pb_RecognitionElement.Image = image;
+                LoadImage(files[0]);
+            }
 
-                if (cb_ConsiderInvreted.Checked)
-                    SortByPossibility();
+            // loading templates
+            else if (x >= panel_signs.Location.X &&
+                x <= panel_signs.Location.X + panel_signs.Width &&
+                y >= panel_signs.Location.Y &&
+                y <= panel_signs.Location.Y + panel_signs.Height)
+            {
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    string path = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
+                    try
+                    {
+                        _templateTask.Init(path);
+                        FormInit(_templateTask);
+
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex); }
+                }
             }
         }
 
+        private void TemplatesForm_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
         #endregion
 
 
@@ -167,11 +220,10 @@ namespace AI_Task
         {
             panel_signs.Controls.Clear();
 
-            var tfes = new List<TemplateFormElement>();
-            foreach (var t in _signsTask.Templates)
-                tfes.Add(new TemplateFormElement(t));
-            tfes.Sort();
-            tfes.Reverse();
+            var tfes = new List<TemplateViewElement>();
+            foreach (var t in _templateTask.Templates)
+                tfes.Add(new TemplateViewElement(t));
+            tfes = tfes.OrderByDescending(tfe => tfe.Template.Possibility).ToList();
 
             panel_signs.Controls.AddRange(tfes.ToArray());
         }
@@ -191,35 +243,27 @@ namespace AI_Task
         private void b_ResetSorting_Click(object sender, EventArgs e)
         {
             panel_signs.Controls.Clear();
-            foreach (var t in _signsTask.Templates)
-                panel_signs.Controls.Add(new TemplateFormElement(t));
+            foreach (var t in _templateTask.Templates)
+                panel_signs.Controls.Add(new TemplateViewElement(t));
         }
 
         #endregion
-
-        private void cb_ConsiderInvreted_CheckedChanged(object sender, EventArgs e)
-        {
-            TemplatesTask.s_ConsiderInverted = cb_ConsiderInvreted.Checked;
-            _signsTask.UpdatePossibilities((Bitmap)pb_RecognitionElement.Image);
-
-            if (sortAuto)
-                SortByPossibility();
-        }
     }
 
-    public class TemplateFormElement : FlowLayoutPanel, IComparer<TemplateFormElement>, IComparable<TemplateFormElement>
+    public class TemplateViewElement : FlowLayoutPanel
     {
-        public static int s_Size;
+        public static int s_Size = 105; // sets in Form
 
-        Template _template;
+        public Template Template { get; private set; }
+
         Label _label;
         PictureBox _pictureBox;
         TextProgressBar _progressBar;
 
 
-        public TemplateFormElement(Template template)
+        public TemplateViewElement(Template template)
         {
-            _template = template;
+            Template = template;
 
             Size = new Size(s_Size + 6, s_Size + 60);
 
@@ -231,7 +275,7 @@ namespace AI_Task
 
             _pictureBox = new PictureBox
             {
-                Image = Imager.Resize(template.Image, s_Size, s_Size, false),
+                Image = Imager.Resize(template.Image, s_Size, s_Size),
                 Padding = new Padding(0, 0, 0, 0),
                 Size = new Size(s_Size, s_Size),
                 SizeMode = PictureBoxSizeMode.StretchImage
@@ -246,7 +290,6 @@ namespace AI_Task
                 VisualMode = ProgressBarDisplayMode.CustomText,
                 CustomText = template.Possibility.ToString()
             };
-
             Controls.Add(_progressBar);
 
             UpdateState();
@@ -254,7 +297,7 @@ namespace AI_Task
 
         public void UpdateState()
         {
-            double curPossibility = _template.Possibility;
+            double curPossibility = Template.Possibility;
             curPossibility = Math.Round(curPossibility, 2);
 
             Color bgcolor = Color.FromArgb(
@@ -266,20 +309,6 @@ namespace AI_Task
             _progressBar.ProgressColor = bgcolor;
             _progressBar.Value = (int)(curPossibility * 100);
             _progressBar.CustomText = curPossibility.ToString();
-        }
-
-
-        public int CompareTo(TemplateFormElement obj)
-        {
-            TemplateFormElement t1 = obj;
-            return Compare(this, t1);
-        }
-
-        public int Compare(TemplateFormElement x, TemplateFormElement y)
-        {
-            Template t1 = x._template;
-            Template t2 = y._template;
-            return t1.CompareTo(t2);
         }
     }
 }
