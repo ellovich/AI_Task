@@ -49,7 +49,9 @@ namespace AI_Task
                 triangles.Add(tr);
             }
 
+#pragma warning disable CS0219 // The variable 'sum' is assigned but its value is never used
             double sum = 0;
+#pragma warning restore CS0219 // The variable 'sum' is assigned but its value is never used
 
             // пройтись по иксам и посчитать A = alpha * X
             // сложить альфы 

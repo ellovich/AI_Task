@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImagerLib;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -8,30 +9,25 @@ namespace AI_Task
 {
     public class TemplatesTask
     {
-        public static FuncsManager s_FuncsManager;
-
         public List<Template> Templates { get; private set; }
+        public static FuncsManager s_FuncsManager;
 
         public TemplatesTask()
         {
-            Template.s_ImageRez = 9;
-
-            Init(AppDomain.CurrentDomain.BaseDirectory + @"res\signs");
-
             s_FuncsManager = new FuncsManager(
-                new Func("black", new Point(0, 1), new Point(70, 1), new Point(170, 0)),
-                new Func("white", new Point(160, 0), new Point(220, 1), new Point(255, 1))
+                new Func("black", new Point(0, 1), new Point(70, 1), new Point(200, 0)),
+                new Func("white", new Point(180, 0), new Point(230, 1), new Point(255, 1))
                 );
-
             ChartForm chartForm = new ChartForm("b&w", s_FuncsManager);
             chartForm.SetChartSizes(-10, 265, -0.1, 1.1);
             chartForm.Show();
 
-            TemplatesForm form = new TemplatesForm(this);
-            form.Show();
+            Template.s_ImageRez = 11;
+            InitTemplates(AppDomain.CurrentDomain.BaseDirectory + @"res\alphabet");
+            (new TemplatesForm(this)).Show();
         }
 
-        public void Init(string pathToTemplates)
+        public void InitTemplates(string pathToTemplates)
         {
             FileInfo[] signTemplates = new DirectoryInfo(pathToTemplates)
                 .GetFilesByExtensions(".jpg", ".png");
@@ -44,38 +40,41 @@ namespace AI_Task
             }
         }
 
+
+        //public static long s_time = 0;
+        //public static long s_counter = 0;
         public void UpdatePossibilities(Bitmap image)
         {
             if (image != null && Templates.Count > 0)
-                Templates.ForEach(i => i.CalcPossibility(image));
-            // Items.AsParallel().ForAll(i => i.CalcPossibility(image));
-            // Parallel.ForEach(Items, i => i.CalcPossibility(image));
+            {
+                image = (Bitmap)Imager.Resize(image, Template.s_ImageRez, Template.s_ImageRez);
+                byte[] myImageGrayPixels = Imager.ImageGetGrayPixelsArray(image);
+
+                int pixelsArrSize = image.Width * image.Height;
+                double[] bs = new double[pixelsArrSize];
+                double[] ws = new double[pixelsArrSize];
+
+                for (int i = 0; i < pixelsArrSize; i++)
+                {
+                    bs[i] = s_FuncsManager["black"].FindValueIn(myImageGrayPixels[i]);
+                    ws[i] = s_FuncsManager["white"].FindValueIn(myImageGrayPixels[i]);
+                }
+
+                //   var watch = System.Diagnostics.Stopwatch.StartNew();
+                Templates.ForEach(t => t.CalcPossibility(bs, ws));
+                //   // Parallel.ForEach(Templates, t => t.CalcPossibility(bs, ws));
+                //   watch.Stop();
+                //   var elapsedMs = watch.ElapsedTicks;
+                //
+                //   s_counter++;
+                //   s_time += elapsedMs;
+            }
         }
 
-
-        public Image CreateScaledDebugPicture(Image image, int srcSize)
-        {
-            Image debugImage = Imager.Resize(image, Template.s_ImageRez, Template.s_ImageRez);
-            debugImage = Imager.GrayScaleFilter((Bitmap)debugImage);
-            debugImage = Imager.Resize(debugImage, srcSize, srcSize);
-            return debugImage;
-        }
-
-        int res = Template.s_ImageRez * Template.s_ImageRez;
-        public Image CreateColoredDebugWinnerPicture(int srcSize)
+        public Image GetWinnerImage(int srcSize)
         {
             Template winner = GetWinner();
             return Imager.Resize(winner.Image, srcSize, srcSize);
-
-            //Bitmap debugImage = new Bitmap(Template.s_ImageRez, Template.s_ImageRez);
-
-            //for (int i = 0; i < Template.s_ImageRez; i++)
-            //    for (int j = 0; j < Template.s_ImageRez; j++)
-            //        debugImage.SetPixel(i, j, Color.FromArgb(
-            //                                            (int)(winner.PixelsPossibilities[i] * 255 / res),
-            //                                            255 - (int)(winner.PixelsPossibilities[i] * 255 / res),
-            //                                            0));
-            //return Imager.Resize((Bitmap)debugImage, srcSize, srcSize);
         }
 
         public Template GetWinner()

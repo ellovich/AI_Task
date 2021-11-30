@@ -14,6 +14,7 @@ namespace AI_Task
             this.Y = Y;
         }
 
+
         public double DistanceTo(Point p)
         {
             return Math.Sqrt((p.X - X) * (p.X - X) + (p.Y - Y) * (p.Y - Y));

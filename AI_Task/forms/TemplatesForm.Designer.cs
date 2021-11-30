@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.panel_signs = new System.Windows.Forms.FlowLayoutPanel();
-            this.pb_RecognitionElement = new System.Windows.Forms.PictureBox();
+            this.pb_myImg = new System.Windows.Forms.PictureBox();
             this.b_Erase = new System.Windows.Forms.Button();
             this.b_ChooseColor = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -40,7 +40,8 @@
             this.cb_SortAuto = new System.Windows.Forms.CheckBox();
             this.pb_DebugImage = new System.Windows.Forms.PictureBox();
             this.pb_DebugImage2 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_RecognitionElement)).BeginInit();
+            this.l_Answer = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_myImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage2)).BeginInit();
             this.SuspendLayout();
@@ -53,31 +54,31 @@
             this.panel_signs.Location = new System.Drawing.Point(13, 14);
             this.panel_signs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel_signs.Name = "panel_signs";
-            this.panel_signs.Size = new System.Drawing.Size(1019, 399);
+            this.panel_signs.Size = new System.Drawing.Size(920, 416);
             this.panel_signs.TabIndex = 6;
             // 
-            // pb_RecognitionElement
+            // pb_myImg
             // 
-            this.pb_RecognitionElement.BackColor = System.Drawing.SystemColors.Window;
-            this.pb_RecognitionElement.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pb_RecognitionElement.Location = new System.Drawing.Point(251, 423);
-            this.pb_RecognitionElement.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pb_RecognitionElement.Name = "pb_RecognitionElement";
-            this.pb_RecognitionElement.Size = new System.Drawing.Size(180, 180);
-            this.pb_RecognitionElement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pb_RecognitionElement.TabIndex = 7;
-            this.pb_RecognitionElement.TabStop = false;
-            this.pb_RecognitionElement.Paint += new System.Windows.Forms.PaintEventHandler(this.pb_RecognitionElement_Paint);
-            this.pb_RecognitionElement.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_RecognitionElement_MouseDown);
-            this.pb_RecognitionElement.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_RecognitionElement_MouseMove);
-            this.pb_RecognitionElement.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_RecognitionElement_MouseUp);
+            this.pb_myImg.BackColor = System.Drawing.SystemColors.Window;
+            this.pb_myImg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pb_myImg.Location = new System.Drawing.Point(222, 451);
+            this.pb_myImg.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pb_myImg.Name = "pb_myImg";
+            this.pb_myImg.Size = new System.Drawing.Size(160, 160);
+            this.pb_myImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pb_myImg.TabIndex = 7;
+            this.pb_myImg.TabStop = false;
+            this.pb_myImg.Paint += new System.Windows.Forms.PaintEventHandler(this.pb_MyImg_Paint);
+            this.pb_myImg.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_MyImg_MouseDown);
+            this.pb_myImg.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_MyImg_MouseMove);
+            this.pb_myImg.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_MyImg_MouseUp);
             // 
             // b_Erase
             // 
-            this.b_Erase.Location = new System.Drawing.Point(439, 523);
+            this.b_Erase.Location = new System.Drawing.Point(390, 576);
             this.b_Erase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_Erase.Name = "b_Erase";
-            this.b_Erase.Size = new System.Drawing.Size(173, 35);
+            this.b_Erase.Size = new System.Drawing.Size(200, 39);
             this.b_Erase.TabIndex = 8;
             this.b_Erase.Text = "Erase";
             this.b_Erase.UseVisualStyleBackColor = true;
@@ -85,10 +86,10 @@
             // 
             // b_ChooseColor
             // 
-            this.b_ChooseColor.Location = new System.Drawing.Point(439, 482);
+            this.b_ChooseColor.Location = new System.Drawing.Point(390, 531);
             this.b_ChooseColor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_ChooseColor.Name = "b_ChooseColor";
-            this.b_ChooseColor.Size = new System.Drawing.Size(173, 35);
+            this.b_ChooseColor.Size = new System.Drawing.Size(200, 39);
             this.b_ChooseColor.TabIndex = 8;
             this.b_ChooseColor.Text = "Choose color";
             this.b_ChooseColor.UseVisualStyleBackColor = true;
@@ -96,10 +97,10 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(439, 423);
+            this.button1.Location = new System.Drawing.Point(390, 451);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(173, 35);
+            this.button1.Size = new System.Drawing.Size(200, 39);
             this.button1.TabIndex = 8;
             this.button1.Text = "Load file";
             this.button1.UseVisualStyleBackColor = true;
@@ -107,10 +108,10 @@
             // 
             // b_SortTemplates
             // 
-            this.b_SortTemplates.Location = new System.Drawing.Point(13, 523);
+            this.b_SortTemplates.Location = new System.Drawing.Point(13, 531);
             this.b_SortTemplates.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_SortTemplates.Name = "b_SortTemplates";
-            this.b_SortTemplates.Size = new System.Drawing.Size(173, 35);
+            this.b_SortTemplates.Size = new System.Drawing.Size(200, 39);
             this.b_SortTemplates.TabIndex = 8;
             this.b_SortTemplates.Text = "Sort by Possibility";
             this.b_SortTemplates.UseVisualStyleBackColor = true;
@@ -118,10 +119,10 @@
             // 
             // b_ResetSorting
             // 
-            this.b_ResetSorting.Location = new System.Drawing.Point(13, 568);
+            this.b_ResetSorting.Location = new System.Drawing.Point(13, 576);
             this.b_ResetSorting.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_ResetSorting.Name = "b_ResetSorting";
-            this.b_ResetSorting.Size = new System.Drawing.Size(173, 35);
+            this.b_ResetSorting.Size = new System.Drawing.Size(200, 39);
             this.b_ResetSorting.TabIndex = 9;
             this.b_ResetSorting.Text = "Reset Sorting";
             this.b_ResetSorting.UseVisualStyleBackColor = true;
@@ -130,9 +131,9 @@
             // cb_ConsiderInvreted
             // 
             this.cb_ConsiderInvreted.AutoSize = true;
-            this.cb_ConsiderInvreted.Location = new System.Drawing.Point(439, 572);
+            this.cb_ConsiderInvreted.Location = new System.Drawing.Point(390, 494);
             this.cb_ConsiderInvreted.Name = "cb_ConsiderInvreted";
-            this.cb_ConsiderInvreted.Size = new System.Drawing.Size(151, 24);
+            this.cb_ConsiderInvreted.Size = new System.Drawing.Size(138, 21);
             this.cb_ConsiderInvreted.TabIndex = 11;
             this.cb_ConsiderInvreted.Text = "Consider inverted";
             this.cb_ConsiderInvreted.UseVisualStyleBackColor = true;
@@ -140,10 +141,10 @@
             // 
             // b_LoadTemplates
             // 
-            this.b_LoadTemplates.Location = new System.Drawing.Point(13, 423);
+            this.b_LoadTemplates.Location = new System.Drawing.Point(13, 451);
             this.b_LoadTemplates.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.b_LoadTemplates.Name = "b_LoadTemplates";
-            this.b_LoadTemplates.Size = new System.Drawing.Size(173, 35);
+            this.b_LoadTemplates.Size = new System.Drawing.Size(201, 39);
             this.b_LoadTemplates.TabIndex = 8;
             this.b_LoadTemplates.Text = "Load templates";
             this.b_LoadTemplates.UseVisualStyleBackColor = true;
@@ -152,9 +153,10 @@
             // cb_SortAuto
             // 
             this.cb_SortAuto.AutoSize = true;
-            this.cb_SortAuto.Location = new System.Drawing.Point(13, 486);
+            this.cb_SortAuto.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cb_SortAuto.Location = new System.Drawing.Point(13, 494);
             this.cb_SortAuto.Name = "cb_SortAuto";
-            this.cb_SortAuto.Size = new System.Drawing.Size(154, 24);
+            this.cb_SortAuto.Size = new System.Drawing.Size(145, 22);
             this.cb_SortAuto.TabIndex = 11;
             this.cb_SortAuto.Text = "Sort automatically";
             this.cb_SortAuto.UseVisualStyleBackColor = true;
@@ -164,10 +166,10 @@
             // 
             this.pb_DebugImage.BackColor = System.Drawing.SystemColors.Window;
             this.pb_DebugImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pb_DebugImage.Location = new System.Drawing.Point(664, 423);
+            this.pb_DebugImage.Location = new System.Drawing.Point(605, 451);
             this.pb_DebugImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pb_DebugImage.Name = "pb_DebugImage";
-            this.pb_DebugImage.Size = new System.Drawing.Size(180, 180);
+            this.pb_DebugImage.Size = new System.Drawing.Size(160, 160);
             this.pb_DebugImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pb_DebugImage.TabIndex = 7;
             this.pb_DebugImage.TabStop = false;
@@ -176,21 +178,30 @@
             // 
             this.pb_DebugImage2.BackColor = System.Drawing.SystemColors.Window;
             this.pb_DebugImage2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pb_DebugImage2.Location = new System.Drawing.Point(852, 423);
+            this.pb_DebugImage2.Location = new System.Drawing.Point(773, 451);
             this.pb_DebugImage2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pb_DebugImage2.Name = "pb_DebugImage2";
-            this.pb_DebugImage2.Size = new System.Drawing.Size(180, 180);
+            this.pb_DebugImage2.Size = new System.Drawing.Size(160, 160);
             this.pb_DebugImage2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pb_DebugImage2.TabIndex = 7;
             this.pb_DebugImage2.TabStop = false;
             // 
+            // l_Answer
+            // 
+            this.l_Answer.AutoSize = true;
+            this.l_Answer.Location = new System.Drawing.Point(820, 616);
+            this.l_Answer.Name = "l_Answer";
+            this.l_Answer.Size = new System.Drawing.Size(53, 17);
+            this.l_Answer.TabIndex = 12;
+            this.l_Answer.Text = "answer";
+            // 
             // TemplatesForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.MediumAquamarine;
-            this.ClientSize = new System.Drawing.Size(1044, 611);
+            this.ClientSize = new System.Drawing.Size(946, 637);
+            this.Controls.Add(this.l_Answer);
             this.Controls.Add(this.cb_SortAuto);
             this.Controls.Add(this.cb_ConsiderInvreted);
             this.Controls.Add(this.b_ResetSorting);
@@ -201,15 +212,17 @@
             this.Controls.Add(this.b_Erase);
             this.Controls.Add(this.pb_DebugImage2);
             this.Controls.Add(this.pb_DebugImage);
-            this.Controls.Add(this.pb_RecognitionElement);
+            this.Controls.Add(this.pb_myImg);
             this.Controls.Add(this.panel_signs);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "TemplatesForm";
             this.Text = "Templates form";
+            this.Activated += new System.EventHandler(this.TemplatesForm_Activated);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TemplatesForm_FormClosed);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.TemplatesForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.TemplatesForm_DragEnter);
-            ((System.ComponentModel.ISupportInitialize)(this.pb_RecognitionElement)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_myImg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_DebugImage2)).EndInit();
             this.ResumeLayout(false);
@@ -219,7 +232,7 @@
 
         #endregion
         private System.Windows.Forms.FlowLayoutPanel panel_signs;
-        private System.Windows.Forms.PictureBox pb_RecognitionElement;
+        private System.Windows.Forms.PictureBox pb_myImg;
         private System.Windows.Forms.Button b_Erase;
         private System.Windows.Forms.Button b_ChooseColor;
         private System.Windows.Forms.Button button1;
@@ -230,5 +243,6 @@
         private System.Windows.Forms.CheckBox cb_SortAuto;
         private System.Windows.Forms.PictureBox pb_DebugImage;
         private System.Windows.Forms.PictureBox pb_DebugImage2;
+        private System.Windows.Forms.Label l_Answer;
     }
 }

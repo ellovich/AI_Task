@@ -9,7 +9,6 @@ namespace AI_Task
         public double XToCheck { get; set; }
 
         private List<Func> _funcs;
-
         private List<Point> _allPoints;
         private List<Point> _funcPoints;
         private List<Point> _intersectionPoints;
@@ -21,6 +20,7 @@ namespace AI_Task
         private List<Point> _unionMaxPoints;
         private List<Point> _unionMaxPointsAll;
         private double _unionMaxAverage;
+
 
         public FuncsManager(string fileName)
         {
@@ -57,6 +57,17 @@ namespace AI_Task
             //   _unionMaxPoints = CalcUnionMaxPoints();
             //   _unionMaxAverage = CalcUnionMaxAverage(15);
         }
+
+        public void RecalculateAll() // works only with FuncsManager constructed from points
+        {
+            _funcPoints = CalcFuncsPoints();
+            _intersectionPoints = CalcAllIntersectionPoints();
+            _allPoints = CalcAllPoints();
+
+            _diffFunc = CalcDiff();
+            _unionFunc = CalcUnion();
+        }
+
 
         private List<Func> ReadFuncsFromFile(string source)
         {
@@ -111,6 +122,7 @@ namespace AI_Task
             _funcs.Remove(oldFunc);
             _funcs.Insert(ind, newFunc);
         }
+
 
         #region CALCS
         private List<Point> CalcFuncsPoints()

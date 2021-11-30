@@ -5,13 +5,13 @@ namespace AI_Task
 {
     public partial class ChartForm : Form
     {
-        FuncsManager _funcsManager;
         ChartManager _chartManager;
+        FuncsManager _funcsManager;
 
         public ChartForm(string name, FuncsManager funcsManager)
         {
             InitializeComponent();
-            Text = name;
+            this.Text = name;
 
             _funcsManager = funcsManager;
             _chartManager = new ChartManager(_funcsManager, chart);
@@ -47,6 +47,7 @@ namespace AI_Task
             _chartManager.SetSizes(xMin, xMax, yMin, yMax);
         }
 
+
         #region CALC BUTTONS
         private void b_CalcForEachFunc_Click(object sender, EventArgs e)
         {
@@ -78,7 +79,7 @@ namespace AI_Task
         #endregion
 
 
-        #region FUNCS EDITING
+        #region FUNCS EDITING MODE
 
         private void b_EditFuncs_Click(object sender, EventArgs e)
         {
@@ -99,12 +100,13 @@ namespace AI_Task
             _chartManager.EndEditingMode();
             b_EditFuncs.Enabled = true;
             b_EndEditing.Hide();
+            _funcsManager.RecalculateAll();
         }
 
         #endregion
 
 
-        private void b_ClearAll_Click(object sender, EventArgs e)
+        private void b_HideAllButFuncs_Click(object sender, EventArgs e)
         {
             _chartManager.HideAllButFuncs();
         }
@@ -117,11 +119,16 @@ namespace AI_Task
         }
 
         private void tb_Value_KeyPress(object sender, KeyPressEventArgs e)
-        { // в текстбокс разрешается вводить только числа
+        {   // textbox accepts only digits
             if (char.IsNumber(e.KeyChar) | (e.KeyChar == Convert.ToChar(",")) | e.KeyChar == '\b')
                 return;
             else
                 e.Handled = true;
+        }
+
+        private void tb_Value_Leave(object sender, EventArgs e)
+        {
+            _funcsManager.XToCheck = Convert.ToDouble(tb_Value.Text);
         }
     }
 }
