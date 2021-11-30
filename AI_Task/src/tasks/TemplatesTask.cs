@@ -22,8 +22,8 @@ namespace AI_Task
             chartForm.SetChartSizes(-10, 265, -0.1, 1.1);
             chartForm.Show();
 
-            Template.s_ImageRez = 11;
-            InitTemplates(AppDomain.CurrentDomain.BaseDirectory + @"res\alphabet");
+            Template.s_ImageRez = 16;
+            InitTemplates(AppDomain.CurrentDomain.BaseDirectory + @"res\signs");
             (new TemplatesForm(this)).Show();
         }
 

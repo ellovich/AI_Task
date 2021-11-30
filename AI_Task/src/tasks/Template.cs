@@ -3,7 +3,6 @@ using System;
 using System.Drawing;
 using System.IO;
 
-
 namespace AI_Task
 {
     public class Template
@@ -29,23 +28,23 @@ namespace AI_Task
 
             _pixelsInverted = new byte[_pixels.Length];
             for (int i = 0; i < _pixels.Length; i++)
-                _pixelsInverted[i] = (byte)(255 - _pixels[i]);
+                _pixelsInverted[i] = (byte)(1 - _pixels[i]);
 
             UpdateBlacksAndWhites();
         }
 
         public void UpdateBlacksAndWhites()
         {
-            // should be updated after changing in s_FuncsManager
-            _blacks = new double[_pixels.Length];
-            for (int i = 0; i < _pixels.Length; i++)
-                _blacks[i] = TemplatesTask.s_FuncsManager["black"].FindValueIn(_pixels[i]);
-
             _whites = new double[_pixels.Length];
             for (int i = 0; i < _pixels.Length; i++)
-                _whites[i] = TemplatesTask.s_FuncsManager["white"].FindValueIn(_pixels[i]);
-        }
+                //_whites[i] = TemplatesTask.s_FuncsManager["white"].FindValueIn(_pixels[i]);
+                _whites[i] = _pixels[i] / 255.0;
 
+            _blacks = new double[_pixels.Length];
+            for (int i = 0; i < _pixels.Length; i++)
+                //_blacks[i] = TemplatesTask.s_FuncsManager["black"].FindValueIn(_pixels[i]);
+                _blacks[i] = 1.0 - _whites[i];
+        }
 
         /// <summary>
         /// Подсчет вероятности совпадения шаблона с текущей картинкой
@@ -61,9 +60,6 @@ namespace AI_Task
             {
                 counter += bs[i] * _blacks[i] + ws[i] * _whites[i];
                 counterForInv += bs[i] * _whites[i] + ws[i] * _blacks[i];
-
-                //counter += (Pixels[i] == 0) ? bs[i] : ws[i];
-                //counterForInv += (PixelsInverted[i] == 0) ? bs[i] : ws[i];
             }
 
             Possibility = (!s_ConsiderInverted) ? (counter / _pixels.Length) :
