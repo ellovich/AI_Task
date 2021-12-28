@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AI_Task</RootNamespace>
     <AssemblyName>AI_Task</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -58,6 +58,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="forms\ColorPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\ColorPicker.Designer.cs">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="forms\TemplatesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,8 +77,12 @@
     <Compile Include="src\core\myControls\TextProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\tasks\BellmanZadde.cs" />
+    <Compile Include="src\tasks\ColorsRedOrange.cs" />
+    <Compile Include="src\tasks\TemplateBW.cs" />
     <Compile Include="src\tasks\Template.cs" />
     <Compile Include="src\tasks\SeasonsTask.cs" />
+    <Compile Include="src\tasks\TemplatesTaskBW.cs" />
     <Compile Include="src\tasks\TemplatesTask.cs" />
     <Compile Include="src\tasks\SugenoTask.cs" />
     <Compile Include="src\core\Line.cs" />
@@ -88,6 +98,9 @@
     <Compile Include="src\core\FuncsManager.cs" />
     <EmbeddedResource Include="forms\ChartForm.resx">
       <DependentUpon>ChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\ColorPicker.resx">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\TemplatesForm.resx">
       <DependentUpon>TemplatesForm.cs</DependentUpon>
@@ -163,6 +176,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="res\alphabet\g.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\alphabet\goldx.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="res\alphabet\h.png">

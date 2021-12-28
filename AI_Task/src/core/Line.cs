@@ -18,12 +18,16 @@ namespace AI_Task
             End = end;
             Length = Begin.DistanceTo(End);
 
-            _a = (Begin.Y - End.Y) / (Begin.X - End.X); // check Begin.X == End.X
+            _a = (Begin.Y - End.Y) / (Begin.X - End.X);
             _b = Begin.Y - _a * Begin.X;
         }
 
         public Point CalcIntersectionPointWith(Line line)
         { // !IsParallelTo
+
+            if ((line.Begin.X - line.End.X).Eq(0)) // случай с вертикальной прямой
+                return new Point(line.Begin.X, FindValueIn(line.Begin.X));
+
             double X = (line._b - this._b) / (this._a - line._a);
             double Y = _a * X + _b;
 

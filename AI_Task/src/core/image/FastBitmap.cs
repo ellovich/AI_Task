@@ -59,17 +59,23 @@ namespace FastBitmapLib
         /// <summary>
         /// Gets the width of this FastBitmap object
         /// </summary>
-        public int Width { get; }
+        public int Width { get; set; }
 
         /// <summary>
         /// Gets the height of this FastBitmap object
         /// </summary>
-        public int Height { get; }
+        public int Height { get; set; }
 
         /// <summary>
         /// Gets the pointer to the first pixel of the bitmap
         /// </summary>
-        public IntPtr Scan0 => _bitmapData.Scan0;
+        /// 
+
+        public IntPtr Scan0
+        {
+            get { return _bitmapData.Scan0; }
+        }
+
 
         /// <summary>
         /// Gets the stride width (in int32-sized values) of the bitmap
@@ -129,7 +135,7 @@ namespace FastBitmapLib
         {
             if (Image.GetPixelFormatSize(bitmap.PixelFormat) != 32)
             {
-                throw new ArgumentException(@"The provided bitmap must have a 32bpp depth", nameof(bitmap));
+                throw new ArgumentException(@"The provided bitmap must have a 32bpp depth", "bitmap");
             }
 
             _bitmap = bitmap;
@@ -289,11 +295,11 @@ namespace FastBitmapLib
 
             if (x < 0 || x >= Width)
             {
-                throw new ArgumentOutOfRangeException(nameof(x), @"The X component must be >= 0 and < width");
+                throw new ArgumentOutOfRangeException("x", @"The X component must be >= 0 and < width");
             }
             if (y < 0 || y >= Height)
             {
-                throw new ArgumentOutOfRangeException(nameof(y), @"The Y component must be >= 0 and < height");
+                throw new ArgumentOutOfRangeException("y", @"The Y component must be >= 0 and < height");
             }
 
             *(uint*)(_scan0 + x + y * Stride) = color;
@@ -316,7 +322,7 @@ namespace FastBitmapLib
 
             if (index < 0 || index >= Height * Stride)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), $@"The index must be >= 0 and < {nameof(Height)} * {nameof(Stride)}");
+                //    throw new ArgumentOutOfRangeException(nameof(index), $@"The index must be >= 0 and < {nameof(Height)} * {nameof(Stride)}");
             }
 
             *(uint*)(_scan0 + index) = color;
@@ -352,11 +358,11 @@ namespace FastBitmapLib
 
             if (x < 0 || x >= Width)
             {
-                throw new ArgumentOutOfRangeException(nameof(x), @"The X component must be >= 0 and < width");
+                throw new ArgumentOutOfRangeException("x", @"The X component must be >= 0 and < width");
             }
             if (y < 0 || y >= Height)
             {
-                throw new ArgumentOutOfRangeException(nameof(y), @"The Y component must be >= 0 and < height");
+                throw new ArgumentOutOfRangeException("y", @"The Y component must be >= 0 and < height");
             }
 
             return *(_scan0 + x + y * Stride);
@@ -379,11 +385,11 @@ namespace FastBitmapLib
 
             if (x < 0 || x >= Width)
             {
-                throw new ArgumentOutOfRangeException(nameof(x), @"The X component must be >= 0 and < width");
+                throw new ArgumentOutOfRangeException("x", @"The X component must be >= 0 and < width");
             }
             if (y < 0 || y >= Height)
             {
-                throw new ArgumentOutOfRangeException(nameof(y), @"The Y component must be >= 0 and < height");
+                throw new ArgumentOutOfRangeException("y", @"The Y component must be >= 0 and < height");
             }
 
             return *((uint*)_scan0 + x + y * Stride);
@@ -407,7 +413,7 @@ namespace FastBitmapLib
 
             if (index < 0 || index >= Height * Stride)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), $@"The index must be >= 0 and < {nameof(Height)} * {nameof(Stride)}");
+                //     throw new ArgumentOutOfRangeException(nameof(index), $@"The index must be >= 0 and < {nameof(Height)} * {nameof(Stride)}");
             }
 
             return *((uint*)_scan0 + index);
@@ -423,7 +429,7 @@ namespace FastBitmapLib
         {
             if (colors.Length != Width * Height)
             {
-                throw new ArgumentException(@"The number of colors of the given array mismatch the pixel count of the bitmap", nameof(colors));
+                throw new ArgumentException(@"The number of colors of the given array mismatch the pixel count of the bitmap", "colors");
             }
 
             // Simply copy the argb values array
@@ -676,7 +682,7 @@ namespace FastBitmapLib
             // Throw exception when trying to copy same bitmap over
             if (source == _bitmap)
             {
-                throw new ArgumentException(@"Copying regions across the same bitmap is not supported", nameof(source));
+                throw new ArgumentException(@"Copying regions across the same bitmap is not supported", "source");
             }
 
             var srcBitmapRect = new Rectangle(0, 0, source.Width, source.Height);
@@ -745,7 +751,7 @@ namespace FastBitmapLib
         {
             if (source == target)
             {
-                throw new ArgumentException(@"Copying pixels across the same bitmap is not supported", nameof(source));
+                throw new ArgumentException(@"Copying pixels across the same bitmap is not supported", "source");
             }
 
             if (source.Width != target.Width || source.Height != target.Height || source.PixelFormat != target.PixelFormat)
@@ -822,14 +828,14 @@ namespace FastBitmapLib
         {
             if (region.Width <= 0 || region.Height <= 0)
             {
-                throw new ArgumentException(@"The provided region must have a width and a height > 0", nameof(region));
+                throw new ArgumentException(@"The provided region must have a width and a height > 0", "region");
             }
 
             var sliceRectangle = Rectangle.Intersect(new Rectangle(Point.Empty, source.Size), region);
 
             if (sliceRectangle.IsEmpty)
             {
-                throw new ArgumentException(@"The provided region must not lie outside of the bitmap's region completely", nameof(region));
+                throw new ArgumentException(@"The provided region must not lie outside of the bitmap's region completely", "region");
             }
 
             var slicedBitmap = new Bitmap(sliceRectangle.Width, sliceRectangle.Height);
@@ -876,19 +882,19 @@ namespace FastBitmapLib
         /// <summary>
         /// Represents a disposable structure that is returned during Lock() calls, and unlocks the bitmap on Dispose calls
         /// </summary>
-        public readonly struct FastBitmapLocker : IDisposable
+        public struct FastBitmapLocker : IDisposable
         {
             /// <summary>
             /// Gets the fast bitmap instance attached to this locker
             /// </summary>
-            public FastBitmap FastBitmap { get; }
+            public FastBitmap FastBitmap { get; private set; }
 
             /// <summary>
             /// Initializes a new instance of the FastBitmapLocker struct with an initial fast bitmap object.
             /// The fast bitmap object passed will be unlocked after calling Dispose() on this struct
             /// </summary>
             /// <param name="fastBitmap">A fast bitmap to attach to this locker which will be released after a call to Dispose</param>
-            public FastBitmapLocker(FastBitmap fastBitmap)
+            public FastBitmapLocker(FastBitmap fastBitmap) :this()
             {
                 FastBitmap = fastBitmap;
             }

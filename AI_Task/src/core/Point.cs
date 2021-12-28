@@ -45,27 +45,29 @@ namespace AI_Task
         #region OVERRIDINGS
         public static bool operator ==(Point point1, Point point2)
         {
-            if (point2 is null)
+            if (ReferenceEquals(point1, null) ||
+                ReferenceEquals(point2, null))
             {
-                return point2 is null;
+                return false;
             }
             return point1.Equals(point2);
         }
 
         public static bool operator !=(Point point1, Point point2)
         {
-            if (point2 is null)
+            if (ReferenceEquals(point1, null) ||
+                ReferenceEquals(point2, null))
             {
-                return point2 is null;
+                return false;
             }
             return !point1.Equals(point2);
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is null)
+            if (ReferenceEquals(obj, null))
             {
-                return obj is null;
+                return false;
             }
             Point p = (Point)obj;
             return X.Eq(p.X) && Y.Eq(p.Y);

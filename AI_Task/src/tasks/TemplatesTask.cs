@@ -10,20 +10,22 @@ namespace AI_Task
     public class TemplatesTask
     {
         public List<Template> Templates { get; private set; }
+
         public static FuncsManager s_FuncsManager;
 
         public TemplatesTask()
         {
             s_FuncsManager = new FuncsManager(
-                new Func("black", new Point(0, 1), new Point(70, 1), new Point(200, 0)),
-                new Func("white", new Point(180, 0), new Point(230, 1), new Point(255, 1))
-                );
-            ChartForm chartForm = new ChartForm("b&w", s_FuncsManager);
+                new Func("red", new Point(0, 0), new Point(255, 1)),
+                new Func("green", new Point(0, 0), new Point(255, 1)),
+                new Func("blue", new Point(0, 0), new Point(255, 1))
+            );
+            ChartForm chartForm = new ChartForm("RGB", s_FuncsManager);
             chartForm.SetChartSizes(-10, 265, -0.1, 1.1);
             chartForm.Show();
 
-            Template.s_ImageRez = 16;
-            InitTemplates(AppDomain.CurrentDomain.BaseDirectory + @"res\signs");
+            Template.s_ImageRez = 9;
+            InitTemplates(AppDomain.CurrentDomain.BaseDirectory + @"res\alphabet");
             (new TemplatesForm(this)).Show();
         }
 
@@ -41,33 +43,28 @@ namespace AI_Task
         }
 
 
-        //public static long s_time = 0;
-        //public static long s_counter = 0;
         public void UpdatePossibilities(Bitmap image)
         {
             if (image != null && Templates.Count > 0)
             {
                 image = (Bitmap)Imager.Resize(image, Template.s_ImageRez, Template.s_ImageRez);
-                byte[] myImageGrayPixels = Imager.ImageGetGrayPixelsArray(image);
+                Color[] pixels = Imager.ImageGetPixelsArray(image);
 
                 int pixelsArrSize = image.Width * image.Height;
+
+                double[] rs = new double[pixelsArrSize];
+                double[] gs = new double[pixelsArrSize];
                 double[] bs = new double[pixelsArrSize];
-                double[] ws = new double[pixelsArrSize];
 
                 for (int i = 0; i < pixelsArrSize; i++)
                 {
-                    bs[i] = s_FuncsManager["black"].FindValueIn(myImageGrayPixels[i]);
-                    ws[i] = s_FuncsManager["white"].FindValueIn(myImageGrayPixels[i]);
+                    rs[i] = s_FuncsManager["red"].FindValueIn(pixels[i].R);
+                    gs[i] = s_FuncsManager["green"].FindValueIn(pixels[i].G);
+                    bs[i] = s_FuncsManager["blue"].FindValueIn(pixels[i].B);
                 }
 
-                //   var watch = System.Diagnostics.Stopwatch.StartNew();
-                Templates.ForEach(t => t.CalcPossibility(bs, ws));
+                Templates.ForEach(t => t.CalcPossibility(rs, gs, bs));
                 //   // Parallel.ForEach(Templates, t => t.CalcPossibility(bs, ws));
-                //   watch.Stop();
-                //   var elapsedMs = watch.ElapsedTicks;
-                //
-                //   s_counter++;
-                //   s_time += elapsedMs;
             }
         }
 

@@ -55,8 +55,14 @@ namespace AI_Task
             if (!isMouseDown && sortAuto) // sorting shouldn`t be called in MouseUp event
                 SortPossibilities();
 
-            pb_DebugImage.Image = Imager.CreateTwiceScaledGrayImage(
-                pb_myImg.Image, _myImgSize, Template.s_ImageRez);
+            //    pb_DebugImage.Image = Imager.CreateTwiceScaledGrayImage(
+            //        pb_myImg.Image, _myImgSize, Template.s_ImageRez);
+
+
+            pb_DebugImage.Image = Imager.CreateTwiceScaledImage(
+                     pb_myImg.Image, _myImgSize, Template.s_ImageRez);
+
+
             pb_DebugImage2.Image = _templateTask.GetWinnerImage(_myImgSize);
 
             l_Answer.Text = _templateTask.GetWinner().Name;
@@ -264,7 +270,7 @@ namespace AI_Task
 
         private void TemplatesForm_Activated(object sender, EventArgs e)
         {
-            _templateTask.Templates.ForEach(t => t.UpdateBlacksAndWhites());
+            _templateTask.Templates.ForEach(t => t.UpdatePixelsDegreesOfTruth());
             UpdateModelAndView();
         }
 

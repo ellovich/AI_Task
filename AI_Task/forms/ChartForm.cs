@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AI_Task
@@ -47,6 +48,11 @@ namespace AI_Task
             _chartManager.SetSizes(xMin, xMax, yMin, yMax);
         }
 
+
+        public void SetFormColor(Color c)
+        {
+            this.BackColor = c;
+        }
 
         #region CALC BUTTONS
         private void b_CalcForEachFunc_Click(object sender, EventArgs e)

@@ -35,6 +35,21 @@ namespace ImagerLib
             return res;
         }
 
+        public static Image CreateTwiceScaledImage(Image image, int fstSize, int sndSize)
+        {
+            Image debugImage = Resize(image, sndSize, sndSize);
+            debugImage = Resize(debugImage, fstSize, fstSize);
+            return debugImage;
+        }
+
+        public static Image CreateTwiceScaledGrayImage(Image image, int fstSize, int sndSize)
+        {
+            Image debugImage = Resize(image, sndSize, sndSize);
+            debugImage = GrayScaleFilter((Bitmap)debugImage);
+            debugImage = Resize(debugImage, fstSize, fstSize);
+            return debugImage;
+        }
+
         public static Bitmap GrayScaleFilter(Bitmap image)
         {
             Bitmap grayScale = new Bitmap(image.Width, image.Height);
@@ -54,14 +69,6 @@ namespace ImagerLib
             return grayScale;
         }
 
-        public static Image CreateTwiceScaledGrayImage(Image image, int fstSize, int sndSize)
-        {
-            Image debugImage = Resize(image, sndSize, sndSize);
-            debugImage = GrayScaleFilter((Bitmap)debugImage);
-            debugImage = Resize(debugImage, fstSize, fstSize);
-            return debugImage;
-        }
-
         public static Bitmap GetWhiteBitmap(int width, int height)
         {
             Bitmap bmp = new Bitmap(width, height);
@@ -72,6 +79,34 @@ namespace ImagerLib
             }
 
             return bmp;
+        }
+
+        public static Color[] ImageGetPixelsArray(Bitmap img)
+        {
+            Color[] pixels = new Color[img.Width * img.Height];
+
+            using (var fastBitmap = img.FastLock())
+                for (int y = 0; y < img.Height; y++)
+                    for (int x = 0; x < img.Width; x++)
+                        pixels[y * img.Width + x] = fastBitmap.GetPixel(x, y);
+
+            return pixels;
+        }
+
+        public static byte[] ImageGetGrayPixelsArray(Bitmap img)
+        {
+            byte[] grayPixels = new byte[img.Width * img.Height];
+
+            using (var fastBitmap = img.FastLock())
+                for (int y = 0; y < img.Height; y++)
+                    for (int x = 0; x < img.Width; x++)
+                    {
+                        Color c = fastBitmap.GetPixel(x, y);
+                        byte gs = (byte)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
+                        grayPixels[y * img.Width + x] = gs;
+                    }
+
+            return grayPixels;
         }
 
 
@@ -125,22 +160,6 @@ namespace ImagerLib
         public static Image PutOnWhiteCanvas(Image image, int width, int height)
         {
             return PutOnCanvas(image, width, height, Color.White);
-        }
-
-        public static byte[] ImageGetGrayPixelsArray(Bitmap img)
-        {
-            byte[] grayPixels = new byte[img.Width * img.Height];
-
-            using (var fastBitmap = img.FastLock())
-                for (int y = 0; y < img.Height; y++)
-                    for (int x = 0; x < img.Width; x++)
-                    {
-                        Color c = fastBitmap.GetPixel(x, y);
-                        byte gs = (byte)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
-                        grayPixels[y * img.Width + x] = gs;
-                    }
-
-            return grayPixels;
         }
 
         public static string GetImage(object img)

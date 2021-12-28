@@ -104,6 +104,17 @@ namespace AI_Task
             return new Func(data[0], pointsList.ToArray());
         }
 
+        public static Func CreateFromValues(string name, List<double> values)
+        {
+            List<Point> points = new List<Point>();
+
+            double pointsCounter = 0.0;
+            foreach (var v in values)
+                points.Add(new Point(v, pointsCounter++));
+
+            return new Func(name, points.ToArray());
+        }
+
         public bool ExistsIn(double x)
         {
             return Lines.Any(line => line.XProjContains(x));
@@ -112,6 +123,25 @@ namespace AI_Task
         public double FindValueIn(double x)
         {
             return ExistsIn(x) ? Lines.Find(line => line.XProjContains(x)).FindValueIn(x) : 0;
+        }
+
+        public List<Point> FindValuesWith(Func func) // CHECK
+        {
+            List<Point> points = new List<Point>();
+
+            if (this != func)
+                foreach (Line line1 in Lines)
+                    foreach (Line line2 in func.Lines)
+                        if (!line1.IsParallelTo(line2))
+                        {
+                            Point point = line1.CalcIntersectionPointWith(line2);
+
+                            // если точка пересечения принадлежит обеим отрезкам
+                            if (point.IsOnLine(line1) && point.IsOnLine(line2))
+                                points.Add(point);
+                        }
+
+            return points.Distinct().ToList();
         }
 
         public List<Point> GetPointsOfMax()

@@ -138,7 +138,7 @@ namespace AI_Task
 
         void MouseUp(object sender, MouseEventArgs e)
         {
-            if (!(_selectedPoint is null))
+           if (!(ReferenceEquals(_selectedPoint, null)))
             {
                 Func selectedFunc = _funcsManager.GetFuncs().Where(f => f.Points.Contains(_selectedPoint)).First();
                 Func newFunc = selectedFunc.ReplacePoint(_selectedPoint, _curPointTemp);

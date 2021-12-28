@@ -58,6 +58,12 @@ namespace AI_Task
             //   _unionMaxAverage = CalcUnionMaxAverage(15);
         }
 
+        public void AddFunc(Func func)
+        {
+            _funcs.Add(func);
+            RecalculateAll();
+        }
+
         public void RecalculateAll() // works only with FuncsManager constructed from points
         {
             _funcPoints = CalcFuncsPoints();

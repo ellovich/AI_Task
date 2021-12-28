@@ -15,8 +15,13 @@ namespace AI_Task
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            TemplatesTask signs = new TemplatesTask();
-            //Console.WriteLine(TemplatesTask.s_time / TemplatesTask.s_counter);
+            // TemplatesTask tt = new TemplatesTask();
+             SugenoTask st = new SugenoTask();
+            // TemplatesTask signs = new TemplatesTask();
+            // Console.WriteLine(TemplatesTask.s_time / TemplatesTask.s_counter);
+            // BellmanZadde bz = new BellmanZadde();
+
+            // ColorsRedOrange colorsRedOrange = new ColorsRedOrange();
 
             Application.Run();
         }
@@ -44,3 +49,4 @@ namespace AI_Task
         }
     }
 }
+
